@@ -1,0 +1,35 @@
+Recurrent neural network package for problems of time-series prediction and generation
+
+Copyright (c) 2009-2011, Jun Namikawa <jnamika@gmail.com>
+License: ISC license (BSD license: mt19937ar.c)
+
+This package implements a gradient-based learning algorithm for recurrent neural networks.
+The package supports
+(1) both fully connected and sparsely connected networks,
+(2) both discrete-time neural networks and continuous-time neural networks,
+(3) training examples of both symbolic data and floating point numbers,
+(4) multi-threading, and
+(5) analyzing some characteristics (ex: Lyapunov spectrum, Kullback-Leibler divergence).
+
+
+
+=== Installation ===
+
+Type `make' to build the `rnn-learn' and `rnn-generate' programs.
+Run them with the argument `-h' to show the usages of them.
+
+There are some other useful programs in this package.
+
+
+
+=== Example ===
+
+Here is a sample session.
+
+> cd bin
+> echo "import gen_target
+gen_target.print_sin_curve(500, 20)" | python > target.txt
+> rnn-learn -e 5000 target.txt
+> rnn-generate -n 1000 rnn.dat
+
+
