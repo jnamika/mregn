@@ -389,18 +389,12 @@ static void print_mre_sigma (
 static void print_mre_init (
         FILE *fp,
         long epoch,
-        const struct mixture_of_rnn_experts *mre,
-        int delay_length)
+        const struct mixture_of_rnn_experts *mre)
 {
     fprintf(fp, "# epoch = %ld\n", epoch);
     for (int i = 0; i < mre->series_num; i++) {
         fprintf(fp, "%d", i);
         const struct rnn_state *rnn_s = mre->mre_s[i].expert_rnn_s[0];
-        for (int n = 0; n < delay_length; n++) {
-            for (int j = 0; j < rnn_s->rnn_p->in_state_size; j++) {
-                fprintf(fp, "\t%f", rnn_s->in_state[n][j]);
-            }
-        }
         for (int j = 0; j < mre->expert_num; j++) {
             rnn_s = mre->mre_s[i].expert_rnn_s[j];
             for (int k = 0; k < rnn_s->rnn_p->c_state_size; k++) {
@@ -422,21 +416,6 @@ static void print_adapt_lr (
 }
 
 
-
-static void compute_mre_error (
-        const struct mre_state *mre_s,
-        double *error,
-        double *joint_likelihood,
-        double *total_likelihood)
-{
-    *error = mre_get_error(mre_s);
-    *joint_likelihood = mre_get_joint_likelihood(mre_s);
-    *total_likelihood = *joint_likelihood + mre_get_prior_likelihood(mre_s);
-    *error /= mre_s->length * mre_s->mre->out_state_size;
-    *joint_likelihood /= mre_s->length;
-    *total_likelihood /= mre_s->length;
-}
-
 static void print_mre_error (
         FILE *fp,
         long epoch,
@@ -449,8 +428,14 @@ static void print_mre_error (
 #pragma omp parallel for
 #endif
     for (int i = 0; i < mre->series_num; i++) {
-        compute_mre_error(mre->mre_s + i, error + i, joint_likelihood + i,
-                total_likelihood + i);
+        const struct mre_state *mre_s = mre->mre_s + i;
+        error[i] = mre_get_error(mre_s);
+        joint_likelihood[i] = mre_get_joint_likelihood(mre_s);
+        total_likelihood[i] = joint_likelihood[i] +
+            mre_get_prior_likelihood(mre_s);
+        error[i] /= mre_s->length * mre->out_state_size;
+        joint_likelihood[i] /= mre_s->length;
+        total_likelihood[i] /= mre_s->length;
     }
     fprintf(fp, "%ld", epoch);
     for (int i = 0; i < mre->series_num; i++) {
@@ -539,8 +524,8 @@ static int enable_print (
 
 static void print_parameters_with_epoch (
         long epoch,
-        struct general_parameters *gp,
-        struct mixture_of_rnn_experts *mre,
+        const struct general_parameters *gp,
+        const struct mixture_of_rnn_experts *mre,
         struct output_files *fp_list)
 {
     if (fp_list->fp_wweight &&
@@ -566,7 +551,7 @@ static void print_parameters_with_epoch (
 
     if (fp_list->fp_winit &&
             enable_print(epoch, &gp->iop.interval_for_init_file)) {
-        print_mre_init(fp_list->fp_winit, epoch, mre, gp->mp.delay_length);
+        print_mre_init(fp_list->fp_winit, epoch, mre);
     }
 
     if (fp_list->fp_wadapt_lr &&
@@ -591,7 +576,7 @@ static void print_parameters_with_epoch (
 
 static void print_open_loop_data_with_epoch (
         long epoch,
-        struct general_parameters *gp,
+        const struct general_parameters *gp,
         struct mixture_of_rnn_experts *mre,
         struct output_files *fp_list)
 {
@@ -626,7 +611,7 @@ static void print_open_loop_data_with_epoch (
 
 static void print_closed_loop_data_with_epoch (
         long epoch,
-        struct general_parameters *gp,
+        const struct general_parameters *gp,
         struct mixture_of_rnn_experts *mre,
         struct output_files *fp_list)
 {
@@ -644,7 +629,7 @@ static void print_closed_loop_data_with_epoch (
     }
 
     if (fp_list->fp_wclosed_state_array &&
-            enable_print(epoch, &gp->iop.interval_for_state_file)) {
+            enable_print(epoch, &gp->iop.interval_for_closed_state_file)) {
         if (!compute_forward_dynamics) {
             mre_forward_dynamics_in_closed_loop_forall(mre,
                     gp->mp.delay_length);
@@ -665,8 +650,8 @@ static void print_closed_loop_data_with_epoch (
 
 
 void print_training_main_begin (
-        struct general_parameters *gp,
-        struct mixture_of_rnn_experts *mre,
+        const struct general_parameters *gp,
+        const struct mixture_of_rnn_experts *mre,
         struct output_files *fp_list)
 {
     if (fp_list->fp_wstate_array) {
@@ -735,7 +720,7 @@ void print_training_main_begin (
 
 void print_training_main_loop (
         long epoch,
-        struct general_parameters *gp,
+        const struct general_parameters *gp,
         struct mixture_of_rnn_experts *mre,
         struct output_files *fp_list)
 {

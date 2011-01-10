@@ -23,22 +23,24 @@
 typedef struct output_files {
     int array_size;
     FILE **fp_wstate_array;
+    FILE **fp_wmre_state_array;
     FILE **fp_wclosed_state_array;
-    FILE **fp_wgate_array;
+    FILE **fp_wclosed_mre_state_array;
     FILE *fp_wweight;
     FILE *fp_wthreshold;
     FILE *fp_wtau;
-    FILE *fp_wsigma;
     FILE *fp_winit;
     FILE *fp_wadapt_lr;
     FILE *fp_werror;
     FILE *fp_wclosed_error;
+    FILE *fp_wlyapunov;
+    FILE *fp_wentropy;
 } output_files;
 
 
 void init_output_files (
         const struct general_parameters *gp,
-        const struct mixture_of_rnn_experts *mre,
+        const struct recurrent_neural_network *rnn,
         struct output_files *fp_list,
         const char* mode);
 
@@ -47,13 +49,14 @@ void free_output_files (struct output_files *fp_list);
 
 void print_training_main_begin (
         const struct general_parameters *gp,
-        const struct mixture_of_rnn_experts *mre,
+        const struct recurrent_neural_network *rnn,
         struct output_files *fp_list);
 
 void print_training_main_loop (
         long epoch,
         const struct general_parameters *gp,
         struct mixture_of_rnn_experts *mre,
+        struct recurrent_neural_network *rnn,
         struct output_files *fp_list);
 
 #endif
