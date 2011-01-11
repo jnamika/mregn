@@ -47,7 +47,7 @@
 #define TAU_FILENAME ""
 #define INIT_FILENAME ""
 #define ADAPT_LR_FILENAME ""
-#define ERROR_FILENAME "error.log"
+#define ERROR_FILENAME "gn-error.log"
 #define CLOSED_ERROR_FILENAME ""
 #define LYAPUNOV_FILENAME ""
 #define ENTROPY_FILENAME ""

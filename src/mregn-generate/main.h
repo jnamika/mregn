@@ -14,43 +14,11 @@
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef PARAMETER_H
-#define PARAMETER_H
+#ifndef MAIN_H
+#define MAIN_H
 
-
-#define EPOCH_SIZE 1000
-#define PRINT_INTERVAL 100
-
-#define RHO 0.001
-#define MOMENTUM 0.9
-
-#define EXPERT_NUM 2
-#define C_STATE_SIZE 10
-
-#define DELAY_LENGTH 1
-
-#define INIT_TAU 5
-#define INIT_SIGMA 0.0
-#define GAMMA 10
-#define GATE_PRIOR_DISTRIBUTION 1
-#define PRIOR_STRENGTH 0
-#define LAMBDA 1.0
-#define ALPHA 0.0
-
-#define STATE_FILENAME ""
-#define CLOSED_STATE_FILENAME ""
-#define GATE_FILENAME ""
-#define WEIGHT_FILENAME ""
-#define THRESHOLD_FILENAME ""
-#define TAU_FILENAME ""
-#define SIGMA_FILENAME ""
-#define INIT_FILENAME ""
-#define ADAPT_LR_FILENAME ""
-#define ERROR_FILENAME "mre-error.log"
-#define CLOSED_ERROR_FILENAME ""
-#define SAVE_FILENAME "mre.dat"
-#define LOAD_FILENAME ""
-
+#define LENGTH 1000
+#define INDEX -1
 
 #endif
 

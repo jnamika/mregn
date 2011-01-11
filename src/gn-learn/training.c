@@ -156,6 +156,7 @@ static void set_parameters_to_recurrent_neural_network (
     rnn_p->fixed_init_c_state = gp->mp.fixed_init_c_state;
 
     if (strlen(gp->iop.load_filename) == 0) {
+        rnn_p->output_type = SOFTMAX_TYPE;
         for (int i = 0; i < rnn_p->c_state_size; i++) {
             rnn_set_connection(rnn_p->in_state_size, rnn_p->connection_ci[i],
                     gp->inp.has_connection_ci[i]);
