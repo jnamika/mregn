@@ -464,12 +464,15 @@ static void print_mre_state (
 
 static void print_mre_state_forall (
         FILE **fp_array,
+        long epoch,
         const struct mixture_of_rnn_experts *mre)
 {
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
     for (int i = 0; i < mre->series_num; i++) {
+        fprintf(fp_array[i], "# epoch = %ld\n", epoch);
+        fprintf(fp_array[i], "# target:%d\n", i);
         print_mre_state(fp_array[i], mre->mre_s + i);
     }
 }
@@ -490,12 +493,15 @@ static void print_mre_gate (
 
 static void print_mre_gate_forall (
         FILE **fp_array,
+        long epoch,
         const struct mixture_of_rnn_experts *mre)
 {
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
     for (int i = 0; i < mre->series_num; i++) {
+        fprintf(fp_array[i], "# epoch = %ld\n", epoch);
+        fprintf(fp_array[i], "# target:%d\n", i);
         print_mre_gate(fp_array[i], mre->mre_s + i);
     }
 }
@@ -562,11 +568,7 @@ static void print_parameters_with_epoch (
 
     if (fp_list->fp_wgate_array &&
             enable_print(epoch, &gp->iop.interval_for_gate_file)) {
-        for (int i = 0; i < fp_list->array_size; i++) {
-            fprintf(fp_list->fp_wgate_array[i], "# epoch = %ld\n", epoch);
-            fprintf(fp_list->fp_wgate_array[i], "# target:%d\n", i);
-        }
-        print_mre_gate_forall(fp_list->fp_wgate_array, mre);
+        print_mre_gate_forall(fp_list->fp_wgate_array, epoch, mre);
         for (int i = 0; i < fp_list->array_size; i++) {
             fprintf(fp_list->fp_wgate_array[i], "\n");
         }
@@ -598,11 +600,7 @@ static void print_open_loop_data_with_epoch (
             mre_forward_dynamics_forall(mre);
             compute_forward_dynamics = 1;
         }
-        for (int i = 0; i < fp_list->array_size; i++) {
-            fprintf(fp_list->fp_wstate_array[i], "# epoch = %ld\n", epoch);
-            fprintf(fp_list->fp_wstate_array[i], "# target:%d\n", i);
-        }
-        print_mre_state_forall(fp_list->fp_wstate_array, mre);
+        print_mre_state_forall(fp_list->fp_wstate_array, epoch, mre);
         for (int i = 0; i < fp_list->array_size; i++) {
             fprintf(fp_list->fp_wstate_array[i], "\n");
         }
@@ -635,13 +633,7 @@ static void print_closed_loop_data_with_epoch (
                     gp->mp.delay_length);
             compute_forward_dynamics = 1;
         }
-        for (int i = 0; i < fp_list->array_size; i++) {
-            fprintf(fp_list->fp_wclosed_state_array[i], "# epoch = %ld\n",
-                    epoch);
-            fprintf(fp_list->fp_wclosed_state_array[i],
-                    "# target:%d (closed loop)\n", i);
-        }
-        print_mre_state_forall(fp_list->fp_wclosed_state_array, mre);
+        print_mre_state_forall(fp_list->fp_wclosed_state_array, epoch, mre);
         for (int i = 0; i < fp_list->array_size; i++) {
             fprintf(fp_list->fp_wclosed_state_array[i], "\n");
         }

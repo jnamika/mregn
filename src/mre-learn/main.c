@@ -129,11 +129,11 @@ static void display_help (void)
             "exhausted, mre-learn executes training iterations.");
     puts("");
     puts("Target-file format which mre-learn can recognize:");
-    puts("In a target-file, the data columns are separated by a tab or comma. "
-            "The number of data columns means the dimension of time series of "
-            "training examples. Comments begin at a sign \"#\" and continue to "
-            "the end of the line. If data are separated by a blank line, each "
-            "data block is recognized as a different time series.");
+    puts("In a target-file, the data columns are separated by a space, tab or "
+            "comma. The number of data columns means the dimension of time "
+            "series of training examples. Comments begin at a sign \"#\" and "
+            "continue to the end of the line. If data are separated by a blank "
+            "line, each data block is recognized as a different time series.");
 }
 
 static void display_version (void)
@@ -761,7 +761,7 @@ static void setup_target (
 {
     init_target_reader(t_reader);
     if (argc == optind && strlen(gp->iop.load_filename) == 0) {
-        if (read_target_from_file(t_reader, "\t,", stdin) == -1) {
+        if (read_target_from_file(t_reader, " \t,", stdin) == -1) {
             print_error_msg("error in the standard input");
             exit(EXIT_FAILURE);
         }
@@ -772,7 +772,7 @@ static void setup_target (
                 print_error_msg("cannot open %s", argv[i]);
                 exit(EXIT_FAILURE);
             }
-            if (read_target_from_file(t_reader, "\t,", fp) == -1) {
+            if (read_target_from_file(t_reader, " \t,", fp) == -1) {
                 print_error_msg("error in %s", argv[i]);
                 exit(EXIT_FAILURE);
             }

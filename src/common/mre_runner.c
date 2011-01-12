@@ -136,8 +136,8 @@ void set_init_state_of_mre_runner (
 #define IN_STATE(X) ((X)->expert_rnn_s[0]->in_state[0])
 
 static void mregn_fmap (
-        struct rnn_state *gn_s,
-        struct mre_state *mre_s)
+        struct mre_state *mre_s,
+        struct rnn_state *gn_s)
 {
     const int expert_num = mre_s->mre->expert_num;
     const int in_state_size = mre_s->mre->in_state_size;
@@ -207,7 +207,7 @@ static void mregn_fmap (
 
 void update_mre_runner (struct mre_runner *runner)
 {
-    mregn_fmap(runner->gn.rnn_s + runner->id, runner->mre.mre_s + runner->id);
+    mregn_fmap(runner->mre.mre_s + runner->id, runner->gn.rnn_s + runner->id);
 }
 
 

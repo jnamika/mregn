@@ -114,10 +114,7 @@ def plot_sigma(f, filename):
 
 def plot_init(f, filename, epoch):
     params = print_log.read_parameter(f)
-    in_state_size = int(params['in_state_size'])
     c_state_size = int(params['c_state_size'])
-    delay_length = int(params['delay_length'])
-    dimension = in_state_size * delay_length + c_state_size
     tmp = tempfile.NamedTemporaryFile()
     sys.stdout = tmp
     print_log.print_init(f, epoch)
@@ -130,8 +127,8 @@ def plot_init(f, filename, epoch):
     p.stdin.write("set ylabel 'Initial state';")
     p.stdin.write("set pointsize 3;")
     command = ["plot "]
-    index = [(2*x,(2*x+1)%dimension) for x in xrange(dimension) if 2*x <
-            dimension]
+    index = [(2*x,(2*x+1)%c_state_size) for x in xrange(c_state_size) if 2*x <
+            c_state_size]
     for x in index:
         command.append("'%s' u %d:%d w p," % (tmp.name, x[0]+2, x[1]+2))
     p.stdin.write(''.join(command)[:-1])
@@ -161,7 +158,7 @@ def plot_error(f, filename):
     p.stdin.write("set logscale y;")
     p.stdin.write("set title 'Type=Error  File=%s';" % filename)
     p.stdin.write("set xlabel 'Learning epoch';")
-    p.stdin.write("set ylabel 'Error / Length';")
+    p.stdin.write("set ylabel 'Error / (Length times Dimension)';")
     command = ["plot "]
     for i in xrange(target_num):
         command.append("'%s' u 1:%d w l," % (filename, i+2))
@@ -203,35 +200,38 @@ def plot_entropy(f, filename):
         p.stdin.write(''.join(command)[:-1])
         p.stdin.write('\n')
 
+def plot_log(files, epoch=None):
+    for file in files:
+        f = open(file, 'r')
+        line = f.readline()
+        if (re.compile(r'^# STATE FILE').match(line)):
+            plot_state(f, file, epoch)
+        elif (re.compile(r'^# WEIGHT FILE').match(line)):
+            plot_weight(f, file)
+        elif (re.compile(r'^# THRESHOLD FILE').match(line)):
+            plot_threshold(f, file)
+        elif (re.compile(r'^# TAU FILE').match(line)):
+            plot_tau(f, file)
+        elif (re.compile(r'^# SIGMA FILE').match(line)):
+            plot_sigma(f, file)
+        elif (re.compile(r'^# INIT FILE').match(line)):
+            plot_init(f, file, epoch)
+        elif (re.compile(r'^# ADAPT_LR FILE').match(line)):
+            plot_adapt_lr(f, file)
+        elif (re.compile(r'^# ERROR FILE').match(line)):
+            plot_error(f, file)
+        elif (re.compile(r'^# LYAPUNOV FILE').match(line)):
+            plot_lyapunov(f, file)
+        elif (re.compile(r'^# ENTROPY FILE').match(line)):
+            plot_entropy(f, file)
+        f.close()
+
+
 def main():
     epoch = None
     if str.isdigit(sys.argv[1]):
         epoch = int(sys.argv[1])
-    args = sys.argv[2:]
-    for arg in args:
-        f = open(arg, 'r')
-        line = f.readline()
-        if (re.compile(r'^# STATE FILE').match(line)):
-            plot_state(f, arg, epoch)
-        elif (re.compile(r'^# WEIGHT FILE').match(line)):
-            plot_weight(f, arg)
-        elif (re.compile(r'^# THRESHOLD FILE').match(line)):
-            plot_threshold(f, arg)
-        elif (re.compile(r'^# TAU FILE').match(line)):
-            plot_tau(f, arg)
-        elif (re.compile(r'^# SIGMA FILE').match(line)):
-            plot_sigma(f, arg)
-        elif (re.compile(r'^# INIT FILE').match(line)):
-            plot_init(f, arg, epoch)
-        elif (re.compile(r'^# ADAPT_LR FILE').match(line)):
-            plot_adapt_lr(f, arg)
-        elif (re.compile(r'^# ERROR FILE').match(line)):
-            plot_error(f, arg)
-        elif (re.compile(r'^# LYAPUNOV FILE').match(line)):
-            plot_lyapunov(f, arg)
-        elif (re.compile(r'^# ENTROPY FILE').match(line)):
-            plot_entropy(f, arg)
-        f.close()
+    plot_log(sys.argv[2:], epoch)
 
 
 if __name__ == "__main__":
