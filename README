@@ -1,0 +1,32 @@
+Mixture of RNN experts package for problems of time-series prediction and generation
+
+Copyright (c) 2009-2011, Jun Namikawa <jnamika@gmail.com>
+License: ISC license (BSD license: mt19937ar.c)
+
+This package implements a gradient-based learning algorithm for mixture of RNN experts.
+The package supports
+(1) both fully connected and sparsely connected networks,
+(2) both discrete-time neural networks and continuous-time neural networks,
+(4) multi-threading, and
+(5) analyzing some characteristics (ex: Lyapunov spectrum, Kullback-Leibler divergence).
+
+
+
+=== Installation ===
+
+Type `make' to build the `mre-learn', `gn-learn' and `mregn-generate' programs.
+Run them with the argument `-h' to show the usages of them.
+
+
+
+=== Example ===
+
+Here is a sample session.
+
+> cd bin
+> echo "import gen_target
+gen_target.print_comp_Lissajous_08curves(1000, 32)" | python > target.txt
+> mre-learn -e 10000 target.txt
+> gn-learn -e 10000 mre.dat
+> mregn-generate -n 10000 mre.dat gn.dat
+

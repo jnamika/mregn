@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009-2011, Jun Namikawa <jnamika@gmail.com>
+    Copyright (c) 2010-2011, Jun Namikawa <jnamika@gmail.com>
 
     Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -14,10 +14,10 @@
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef TEST_MRE_LYAPUNOV_H
-#define TEST_MRE_LYAPUNOV_H
+#ifndef TEST_MREGN_RUNNER_H
+#define TEST_MREGN_RUNNER_H
 
-void test_mre_lyapunov(void);
+void test_mregn_runner(void);
 
 #endif
 

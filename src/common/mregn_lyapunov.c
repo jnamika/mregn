@@ -24,13 +24,13 @@
 #endif
 #include "utils.h"
 #include "solver.h"
-#include "mre_lyapunov.h"
+#include "mregn_lyapunov.h"
 
 
 
 
-void init_mre_lyapunov_info (
-        struct mre_lyapunov_info *ml_info,
+void init_mregn_lyapunov_info (
+        struct mregn_lyapunov_info *ml_info,
         const struct mre_state *mre_s,
         const struct rnn_state *gn_s,
         int mre_delay_length,
@@ -64,10 +64,10 @@ void init_mre_lyapunov_info (
     }
     ml_info->dimension += gn_s->rnn_p->c_state_size;
 
-    mre_lyapunov_info_alloc(ml_info);
+    mregn_lyapunov_info_alloc(ml_info);
 }
 
-void mre_lyapunov_info_alloc (struct mre_lyapunov_info *ml_info)
+void mregn_lyapunov_info_alloc (struct mregn_lyapunov_info *ml_info)
 {
     const struct rnn_state *gn_s = ml_info->gn_s;
     const struct mre_state *mre_s = ml_info->mre_s;
@@ -98,7 +98,7 @@ void mre_lyapunov_info_alloc (struct mre_lyapunov_info *ml_info)
     }
 }
 
-void free_mre_lyapunov_info (struct mre_lyapunov_info *ml_info)
+void free_mregn_lyapunov_info (struct mregn_lyapunov_info *ml_info)
 {
     free(ml_info->tmp_gn_matrix[0]);
     free(ml_info->tmp_gn_matrix);
@@ -335,7 +335,7 @@ double** mre_jacobian_for_lyapunov_spectrum (
         double** matrix,
         void *obj)
 {
-    struct mre_lyapunov_info *ml_info = (mre_lyapunov_info*)obj;
+    struct mregn_lyapunov_info *ml_info = (mregn_lyapunov_info*)obj;
     const struct rnn_state *gn_s = ml_info->gn_s;
     const struct mre_state *mre_s = ml_info->mre_s;
     const int T = t + ml_info->truncate_length;
@@ -360,7 +360,7 @@ double** mre_jacobian_for_lyapunov_spectrum (
 }
 
 
-void reset_mre_lyapunov_info (struct mre_lyapunov_info *ml_info)
+void reset_mregn_lyapunov_info (struct mregn_lyapunov_info *ml_info)
 {
     const struct mre_state *mre_s = ml_info->mre_s;
     const struct rnn_state *gn_s = ml_info->gn_s;
@@ -437,12 +437,12 @@ void reset_mre_lyapunov_info (struct mre_lyapunov_info *ml_info)
 
 
 /* this function returns the Lyapunov spectrum of mixture of RNN experts */
-double* mre_lyapunov_spectrum (
-        struct mre_lyapunov_info *ml_info,
+double* mregn_lyapunov_spectrum (
+        struct mregn_lyapunov_info *ml_info,
         double *spectrum,
         int spectrum_size)
 {
-    reset_mre_lyapunov_info(ml_info);
+    reset_mregn_lyapunov_info(ml_info);
     return lyapunov_spectrum((const double* const*)ml_info->state,
             ml_info->length, spectrum_size, ml_info->dimension, 1,
             mre_jacobian_for_lyapunov_spectrum, ml_info, spectrum, NULL, NULL);

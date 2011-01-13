@@ -27,7 +27,7 @@
 #include "print.h"
 #include "mregn.h"
 #include "entropy.h"
-#include "mre_lyapunov.h"
+#include "mregn_lyapunov.h"
 
 
 
@@ -488,15 +488,15 @@ static void compute_lyapunov_spectrum_of_mregn_state (
         double *spectrum)
 {
     if (gn_s->length > truncate_length && mre_s->length > truncate_length) {
-        struct mre_lyapunov_info ml_info;
-        init_mre_lyapunov_info(&ml_info, mre_s, gn_s, mre_delay_length,
+        struct mregn_lyapunov_info ml_info;
+        init_mregn_lyapunov_info(&ml_info, mre_s, gn_s, mre_delay_length,
                 gn_delay_length, truncate_length);
-        spectrum = mre_lyapunov_spectrum(&ml_info, spectrum, spectrum_size);
+        spectrum = mregn_lyapunov_spectrum(&ml_info, spectrum, spectrum_size);
         if (spectrum == NULL) {
             print_error_msg();
             exit(EXIT_FAILURE);
         }
-        free_mre_lyapunov_info(&ml_info);
+        free_mregn_lyapunov_info(&ml_info);
     } else {
         for (int i = 0; i < spectrum_size; i++) {
             spectrum[i] = 0;

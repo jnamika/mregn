@@ -28,7 +28,7 @@
 #endif
 #include "utils.h"
 #include "main.h"
-#include "mre_runner.h"
+#include "mregn_runner.h"
 
 
 #define TO_STRING_I(s) #s
@@ -124,7 +124,7 @@ int main (int argc, char *argv[])
 
     init_genrand(seed);
 
-    struct mre_runner runner;
+    struct mregn_runner runner;
     FILE *fp_mre, *fp_gn;
     if ((fp_mre = fopen(argv[optind], "r")) == NULL) {
         print_error_msg("cannot open %s", argv[optind]);
@@ -134,20 +134,20 @@ int main (int argc, char *argv[])
         print_error_msg("cannot open %s", argv[optind+1]);
         exit(EXIT_FAILURE);
     }
-    init_mre_runner(&runner, fp_mre, fp_gn);
+    init_mregn_runner(&runner, fp_mre, fp_gn);
     fclose(fp_mre);
     fclose(fp_gn);
 
     const int out_state_size = mre_out_state_size_from_runner(&runner);
-    set_init_state_of_mre_runner(&runner, index);
+    set_init_state_of_mregn_runner(&runner, index);
     for (long n = 0; n < length; n++) {
-        update_mre_runner(&runner);
+        update_mregn_runner(&runner);
         double *out_state = mre_out_state_from_runner(&runner);
         for (int i = 0; i < out_state_size; i++) {
             printf("%f%c", out_state[i], i < out_state_size - 1 ? '\t' : '\n');
         }
     }
-    free_mre_runner(&runner);
+    free_mregn_runner(&runner);
 
 #ifdef ENABLE_MTRACE
     muntrace();

@@ -14,14 +14,14 @@
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef MRE_LYAPUNOV_H
-#define MRE_LYAPUNOV_H
+#ifndef MREGN_LYAPUNOV_H
+#define MREGN_LYAPUNOV_H
 
 #include "rnn.h"
 #include "mre.h"
 
 
-typedef struct mre_lyapunov_info {
+typedef struct mregn_lyapunov_info {
     const struct mre_state *mre_s;
     const struct rnn_state *gn_s;
     int mre_delay_length;
@@ -35,25 +35,25 @@ typedef struct mre_lyapunov_info {
 
     int length;
     double **state;
-} mre_lyapunov_info;
+} mregn_lyapunov_info;
 
 
-void init_mre_lyapunov_info (
-        struct mre_lyapunov_info *ml_info,
+void init_mregn_lyapunov_info (
+        struct mregn_lyapunov_info *ml_info,
         const struct mre_state *mre_s,
         const struct rnn_state *gn_s,
         int mre_delay_length,
         int gn_delay_length,
         int truncate_length);
 
-void mre_lyapunov_info_alloc (struct mre_lyapunov_info *ml_info);
+void mregn_lyapunov_info_alloc (struct mregn_lyapunov_info *ml_info);
 
-void free_mre_lyapunov_info (struct mre_lyapunov_info *ml_info);
+void free_mregn_lyapunov_info (struct mregn_lyapunov_info *ml_info);
 
-void reset_mre_lyapunov_info (struct mre_lyapunov_info *ml_info);
+void reset_mregn_lyapunov_info (struct mregn_lyapunov_info *ml_info);
 
-double* mre_lyapunov_spectrum (
-        struct mre_lyapunov_info *ml_info,
+double* mregn_lyapunov_spectrum (
+        struct mregn_lyapunov_info *ml_info,
         double *spectrum,
         int spectrum_size);
 

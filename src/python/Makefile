@@ -1,62 +1,41 @@
-# Makefile for: a program to display output of mixture of RNN experts
-# Data created: 7 Jan 2011
+# Makefile for: python scripts
+# Data created: 12 Jan 2011
 # Whom: Jun Namikawa
 
-TARGET = mregn-generate
-VERSION = 1.0
+TARGET = libmrunner.so
+VERSION = 1
 
 CC = gcc
 CPP = gcc
 
-OBJ_DIR = ../../obj/mregn-generate
+OBJ_DIR = ../../obj/python
 BIN_DIR = ../../bin
 COMMON_DIR = ../common
 RNN_COMMON_DIR = ../../rnn/src/common
-
-enable_mtrace = no
-enable_gprof = no
-
+RNN_PY_DIR = ../../rnn/src/python
 
 INCLUDE_DIR := -I. -I$(COMMON_DIR) -I$(RNN_COMMON_DIR)
 LIB_DIR :=
 WARNFLAG := -Wall -Wextra -Wno-unused-parameter
 STD := -std=gnu99 -pedantic
-OPT := -O3 -fopenmp
-MACROS := -DVERSION=$(VERSION) -DENABLE_ADAPTIVE_LEARNING_RATE -DENABLE_ATTRACTION_OF_INIT_C -DNDEBUG
+OPT := -O3 -fPIC
+MACROS :=
 SYSLIBS := -lm
 DEBUG :=
-
-
-ifneq ($(CC), gcc)
-enable_gprof = no
-endif
-
-ifeq ($(CC), icc)
-WARNFLAG := -Wall
-STD := -std=c99
-OPT := -O3 -openmp
-MACROS := $(MACROS) -D_POSIX_C_SOURCE=200112L
-endif
-
-ifeq ($(enable_mtrace), yes)
-MACROS := $(MACROS) -DENABLE_MTRACE
-OPT := -O
-DEBUG := $(DEBUG) -g
-endif
-ifeq ($(enable_gprof), yes)
-DEBUG := $(DEBUG) -pg
-endif
-
 
 CFLAGS = $(WARNFLAG) $(STD) $(OPT) $(MACROS) $(INCLUDE_DIR) $(LIB_DIR) $(DEBUG)
 
 
 vpath %.c $(COMMON_DIR) $(RNN_COMMON_DIR)
-SRCS = main.c rnn.c mre.c mregn_runner.c utils.c mt19937ar.c
+SRCS = mregn_runner.c rnn.c mre.c utils.c mt19937ar.c
+PY_SRCS = mregn_runner.py $(RNN_PY_DIR)/print_log.py $(RNN_PY_DIR)/plot_log.py print_mregn_log.py plot_mregn_log.py
+SH_SRCS = print-log plot-log
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 
+
 .PHONY: all
-all: depend.mk $(OBJ_DIR) $(BIN_DIR) $(BIN_DIR)/$(TARGET)
+all: depend.mk $(OBJ_DIR) $(BIN_DIR) $(BIN_DIR)/$(TARGET) $(PY_SRCS) $(SH_SRCS)
+	-@ cp $(PY_SRCS) $(SH_SRCS) $(BIN_DIR)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
@@ -65,7 +44,7 @@ $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
 
 $(BIN_DIR)/$(TARGET): $(OBJS)
-	$(CC) -o $@ $(OBJS) $(CFLAGS) $(SYSLIBS)
+	$(CC) -shared -Wl,-soname,$@.$(VERSION) -o $@ $(OBJS) $(CFLAGS) $(SYSLIBS)
 
 $(OBJ_DIR)/%.o: %.c
 	$(CC) -c $< -o $@ $(CFLAGS)
@@ -86,15 +65,15 @@ depend.mk: $(SRCS)
 
 .PHONY: clean
 clean:
-	-@ rm -rf $(OBJ_DIR) $(BIN_DIR)/$(TARGET) depend.mk
+	-@ rm -rf $(OBJ_DIR) $(BIN_DIR)/$(TARGET) $(PY_SRCS:%=$(BIN_DIR)/%) $(SH_SRCS:%=$(BIN_DIR)/%) depend.mk
 
 .PHONY: help
 help: info
 
 info:
 	-@ echo
-	-@ echo "Makefile for mregn-generate"
-	-@ echo "Jun Namikawa, 2011"
+	-@ echo "Makefile for shared library of mixture of RNN experts used by python script"
+	-@ echo "Jun Namikawa, 2010"
 	-@ echo
 	-@ echo "USAGE: make [all | clean | help]"
 	-@ echo "all (default)      builds $(TARGET)"

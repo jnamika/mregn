@@ -34,7 +34,7 @@ CFLAGS = $(WARNFLAG) $(STD) $(OPT) $(MACROS) $(INCLUDE_DIR) $(LIB_DIR) $(DEBUG)
 
 
 vpath %.c $(COMMON_DIR) $(RNN_COMMON_DIR) $(RNN_LEARN_DIR) $(RNN_UNIT_TEST_DIR)
-SRCS = main.c minunit.c test_utils.c test_rnn.c test_mre.c test_mregn.c test_entropy.c test_solver.c test_rnn_lyapunov.c test_mre_lyapunov.c test_target.c test_parse.c test_rnn_runner.c test_mre_runner.c rnn.c mre.c mregn.c solver.c entropy.c rnn_lyapunov.c mre_lyapunov.c target.c rnn_runner.c mre_runner.c parse.c utils.c mt19937ar.c
+SRCS = main.c minunit.c test_utils.c test_rnn.c test_mre.c test_mregn.c test_entropy.c test_solver.c test_rnn_lyapunov.c test_mregn_lyapunov.c test_target.c test_parse.c test_rnn_runner.c test_mregn_runner.c rnn.c mre.c mregn.c solver.c entropy.c rnn_lyapunov.c mregn_lyapunov.c target.c rnn_runner.c mregn_runner.c parse.c utils.c mt19937ar.c
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 
 .PHONY: all

@@ -25,31 +25,31 @@
 #include "config.h"
 #endif
 #include "utils.h"
-#include "mre_runner.h"
+#include "mregn_runner.h"
 
 
 /******************************************************************************/
 /********** Initialization and Free *******************************************/
 /******************************************************************************/
 
-int _new_mre_runner (struct mre_runner **runner)
+int _new_mregn_runner (struct mregn_runner **runner)
 {
-    (*runner) = malloc(sizeof(struct mre_runner));
+    (*runner) = malloc(sizeof(struct mregn_runner));
     if ((*runner) == NULL) {
         return 1;
     }
     return 0;
 }
 
-void _delete_mre_runner (struct mre_runner *runner)
+void _delete_mregn_runner (struct mregn_runner *runner)
 {
     free(runner);
 }
 
 
 
-void init_mre_runner (
-        struct mre_runner *runner,
+void init_mregn_runner (
+        struct mregn_runner *runner,
         FILE *mre_fp,
         FILE *gn_fp)
 {
@@ -67,7 +67,7 @@ void init_mre_runner (
 }
 
 
-void free_mre_runner (struct mre_runner *runner)
+void free_mregn_runner (struct mregn_runner *runner)
 {
     free_mixture_of_rnn_experts(&runner->mre);
     free_recurrent_neural_network(&runner->gn);
@@ -108,8 +108,8 @@ static void random_init_state (struct rnn_state *rnn_s)
 }
 
 
-void set_init_state_of_mre_runner (
-        struct mre_runner *runner,
+void set_init_state_of_mregn_runner (
+        struct mregn_runner *runner,
         int series_id)
 {
     if (series_id >= 0 && series_id < runner->id) {
@@ -205,7 +205,7 @@ static void mregn_fmap (
 }
 
 
-void update_mre_runner (struct mre_runner *runner)
+void update_mregn_runner (struct mregn_runner *runner)
 {
     mregn_fmap(runner->mre.mre_s + runner->id, runner->gn.rnn_s + runner->id);
 }
@@ -216,95 +216,95 @@ void update_mre_runner (struct mre_runner *runner)
 /********** Interface *********************************************************/
 /******************************************************************************/
 
-int gn_in_state_size_from_runner (struct mre_runner *runner)
+int gn_in_state_size_from_runner (struct mregn_runner *runner)
 {
     return runner->gn.rnn_p.in_state_size;
 }
 
-int gn_c_state_size_from_runner (struct mre_runner *runner)
+int gn_c_state_size_from_runner (struct mregn_runner *runner)
 {
     return runner->gn.rnn_p.c_state_size;
 }
 
-int gn_out_state_size_from_runner (struct mre_runner *runner)
+int gn_out_state_size_from_runner (struct mregn_runner *runner)
 {
     return runner->gn.rnn_p.out_state_size;
 }
 
-int gn_delay_length_from_runner (struct mre_runner *runner)
+int gn_delay_length_from_runner (struct mregn_runner *runner)
 {
     return runner->gn.rnn_s[runner->id].length;
 }
 
-int gn_target_num_from_runner (struct mre_runner *runner)
+int gn_target_num_from_runner (struct mregn_runner *runner)
 {
     return runner->id;
 }
 
-double* gn_in_state_from_runner (struct mre_runner *runner)
+double* gn_in_state_from_runner (struct mregn_runner *runner)
 {
     return runner->gn.rnn_s[runner->id].in_state[0];
 }
 
-double* gn_c_state_from_runner (struct mre_runner *runner)
+double* gn_c_state_from_runner (struct mregn_runner *runner)
 {
     return runner->gn.rnn_s[runner->id].init_c_state;
 }
 
-double* gn_c_inter_state_from_runner (struct mre_runner *runner)
+double* gn_c_inter_state_from_runner (struct mregn_runner *runner)
 {
     return runner->gn.rnn_s[runner->id].init_c_inter_state;
 }
 
-double* gn_out_state_from_runner (struct mre_runner *runner)
+double* gn_out_state_from_runner (struct mregn_runner *runner)
 {
     return runner->gn.rnn_s[runner->id].out_state[0];
 }
 
-struct rnn_state* gn_state_from_runner (struct mre_runner *runner)
+struct rnn_state* gn_state_from_runner (struct mregn_runner *runner)
 {
     return runner->gn.rnn_s + runner->id;
 }
 
 
-int mre_in_state_size_from_runner (struct mre_runner *runner)
+int mre_in_state_size_from_runner (struct mregn_runner *runner)
 {
     return runner->mre.in_state_size;
 }
 
-int mre_out_state_size_from_runner (struct mre_runner *runner)
+int mre_out_state_size_from_runner (struct mregn_runner *runner)
 {
     return runner->mre.out_state_size;
 }
 
-int mre_delay_length_from_runner (struct mre_runner *runner)
+int mre_delay_length_from_runner (struct mregn_runner *runner)
 {
     return runner->mre.mre_s[runner->id].length;
 }
 
-int mre_target_num_from_runner (struct mre_runner *runner)
+int mre_target_num_from_runner (struct mregn_runner *runner)
 {
     return runner->id;
 }
 
-double* mre_in_state_from_runner (struct mre_runner *runner)
+double* mre_in_state_from_runner (struct mregn_runner *runner)
 {
     return IN_STATE(runner->mre.mre_s + runner->id);
 }
 
-double* mre_out_state_from_runner (struct mre_runner *runner)
+double* mre_out_state_from_runner (struct mregn_runner *runner)
 {
     return runner->mre.mre_s[runner->id].out_state[0];
 }
 
-struct mre_state* mre_state_from_runner (struct mre_runner *runner)
+struct mre_state* mre_state_from_runner (struct mregn_runner *runner)
 {
     return runner->mre.mre_s + runner->id;
 }
 
 
 int expert_rnn_c_state_size_from_runner (
-        struct mre_runner *runner,
+        struct mregn_runner *runner,
         int index)
 {
     if (index < 0 || index >= runner->mre.expert_num) {
@@ -315,7 +315,7 @@ int expert_rnn_c_state_size_from_runner (
 }
 
 double* expert_rnn_c_state_from_runner (
-        struct mre_runner *runner,
+        struct mregn_runner *runner,
         int index)
 {
     if (index < 0 || index >= runner->mre.expert_num) {
@@ -328,7 +328,7 @@ double* expert_rnn_c_state_from_runner (
 }
 
 double* expert_rnn_c_inter_state_from_runner (
-        struct mre_runner *runner,
+        struct mregn_runner *runner,
         int index)
 {
     if (index < 0 || index >= runner->mre.expert_num) {
@@ -341,7 +341,7 @@ double* expert_rnn_c_inter_state_from_runner (
 }
 
 struct rnn_state* expert_rnn_state_from_runner (
-        struct mre_runner *runner,
+        struct mregn_runner *runner,
         int index)
 {
     return runner->mre.mre_s[runner->id].expert_rnn_s[index];

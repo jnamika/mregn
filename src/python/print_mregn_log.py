@@ -20,7 +20,7 @@ def read_parameter(f):
             if (v.match(line)):
                 x = int(line.split('=')[1])
                 if k == 'target':
-                    m = int(v.match(line).group(1))
+                    m = v.match(line).group(1)
                     if (k in params):
                         params[k][m] = x
                     else:
