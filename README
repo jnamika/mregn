@@ -17,6 +17,7 @@ The package supports
 Type `make' to build the `mre-learn', `gn-learn' and `mregn-generate' programs.
 Run them with the argument `-h' to show the usages of them.
 
+There are some other useful programs in this package.
 
 
 === Example ===
@@ -27,6 +28,6 @@ Here is a sample session.
 > echo "import gen_target
 gen_target.print_comp_Lissajous_08curves(1000, 32)" | python > target.txt
 > mre-learn -e 10000 target.txt
-> gn-learn -e 10000 mre.dat
+> gn-learn -a -e 10000 mre.dat
 > mregn-generate -n 10000 mre.dat gn.dat
 

@@ -186,11 +186,12 @@ def plot_error(f, filename):
     params = print_mregn_log.read_parameter(f)
     target_num = int(params['target_num'])
     type = {}
-    type['Error'] = ('Error / (Length times Dimension)', lambda x: 3 * x + 2)
+    type['Error'] = ('Error / (Length times Dimension)', lambda x: 3 * x + 2, \
+            'set logscale y;')
     type['Joint likelihood'] = ('Joint-likelihood / Length',
-            lambda x: 3 * x + 3)
+            lambda x: 3 * x + 3, '')
     type['Total likelihood'] = ('Total-likelihood / Length',
-            lambda x: 3 * x + 4)
+            lambda x: 3 * x + 4, '')
     for k,v in type.iteritems():
         p = subprocess.Popen(['gnuplot -persist'], stdin=subprocess.PIPE,
                 shell=True)
@@ -198,6 +199,7 @@ def plot_error(f, filename):
         p.stdin.write("set title 'Type=%s  File=%s';" % (k, filename))
         p.stdin.write("set xlabel 'Learning epoch';")
         p.stdin.write("set ylabel '%s';" % v[0])
+        p.stdin.write(v[2])
         command = ["plot "]
         for i in xrange(target_num):
             command.append("'%s' u 1:%d w l," % (filename, v[1](i)))
@@ -228,6 +230,8 @@ def plot_mre_log(files, epoch):
             plot_adapt_lr(f, file)
         elif (re.compile(r'^# MRE ERROR FILE').match(line)):
             plot_error(f, file)
+        else:
+            plot_log.plot_log([file], epoch)
         f.close()
 
 
@@ -235,7 +239,6 @@ def main():
     epoch = None
     if str.isdigit(sys.argv[1]):
         epoch = int(sys.argv[1])
-    plot_log.plot_log(sys.argv[2:], epoch)
     plot_mre_log(sys.argv[2:], epoch)
 
 
