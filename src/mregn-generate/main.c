@@ -115,7 +115,7 @@ int main (int argc, char *argv[])
                 "range: x >= 1 (integer)");
         exit(EXIT_FAILURE);
     }
-    if (optind >= argc + 1) {
+    if (optind + 1 >= argc) {
         print_error_msg("Usage: mre-generate [-s seed] [-n length] [-i index] "
                 "mre-file gn-file\nTry `mre-generate -h' for more "
                 "information.");
