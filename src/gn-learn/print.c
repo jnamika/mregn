@@ -250,6 +250,20 @@ static void print_rnn_parameters (
     fprintf(fp, "# in_state_size = %d\n", rnn->rnn_p.in_state_size);
     fprintf(fp, "# c_state_size = %d\n", rnn->rnn_p.c_state_size);
     fprintf(fp, "# out_state_size = %d\n", rnn->rnn_p.out_state_size);
+    if (rnn->rnn_p.output_type == STANDARD_TYPE) {
+        fprintf(fp, "# output_type = STANDARD_TYPE\n");
+    } else if (rnn->rnn_p.output_type == SOFTMAX_TYPE) {
+        fprintf(fp, "# output_type = SOFTMAX_TYPE\n");
+        for (int c = 0; c < rnn->rnn_p.softmax_group_num; c++) {
+            fprintf(fp, "# group%d = ", c);
+            for (int i = 0; i < rnn->rnn_p.out_state_size; i++) {
+                if (rnn->rnn_p.softmax_group_id[i] == c) {
+                    fprintf(fp, "%d,", i);
+                }
+            }
+            fprintf(fp, "\n");
+        }
+    }
     if (rnn->rnn_p.fixed_weight) {
         fprintf(fp, "# fixed_weight\n");
     }

@@ -208,38 +208,38 @@ def plot_error(f, filename):
         p.stdin.write('exit\n')
         p.wait()
 
-def plot_mre_log(files, epoch):
-    for file in files:
-        f = open(file, 'r')
-        line = f.readline()
-        if (re.compile(r'^# MRE STATE FILE').match(line)):
-            plot_state(f, file, epoch)
-        if (re.compile(r'^# MRE GATE FILE').match(line)):
-            plot_gate(f, file, epoch)
-        elif (re.compile(r'^# MRE WEIGHT FILE').match(line)):
-            plot_weight(f, file)
-        elif (re.compile(r'^# MRE THRESHOLD FILE').match(line)):
-            plot_threshold(f, file)
-        elif (re.compile(r'^# MRE TAU FILE').match(line)):
-            plot_tau(f, file)
-        elif (re.compile(r'^# MRE SIGMA FILE').match(line)):
-            plot_sigma(f, file)
-        elif (re.compile(r'^# MRE INIT FILE').match(line)):
-            plot_init(f, file, epoch)
-        elif (re.compile(r'^# MRE ADAPT_LR FILE').match(line)):
-            plot_adapt_lr(f, file)
-        elif (re.compile(r'^# MRE ERROR FILE').match(line)):
-            plot_error(f, file)
-        else:
-            plot_log.plot_log([file], epoch)
-        f.close()
+def plot_mre_log(f, file, epoch):
+    line = f.readline()
+    if (re.compile(r'^# MRE STATE FILE').match(line)):
+        plot_state(f, file, epoch)
+    if (re.compile(r'^# MRE GATE FILE').match(line)):
+        plot_gate(f, file, epoch)
+    elif (re.compile(r'^# MRE WEIGHT FILE').match(line)):
+        plot_weight(f, file)
+    elif (re.compile(r'^# MRE THRESHOLD FILE').match(line)):
+        plot_threshold(f, file)
+    elif (re.compile(r'^# MRE TAU FILE').match(line)):
+        plot_tau(f, file)
+    elif (re.compile(r'^# MRE SIGMA FILE').match(line)):
+        plot_sigma(f, file)
+    elif (re.compile(r'^# MRE INIT FILE').match(line)):
+        plot_init(f, file, epoch)
+    elif (re.compile(r'^# MRE ADAPT_LR FILE').match(line)):
+        plot_adapt_lr(f, file)
+    elif (re.compile(r'^# MRE ERROR FILE').match(line)):
+        plot_error(f, file)
 
 
 def main():
     epoch = None
     if str.isdigit(sys.argv[1]):
         epoch = int(sys.argv[1])
-    plot_mre_log(sys.argv[2:], epoch)
+    for file in sys.argv[2:]:
+        f = open(file, 'r')
+        plot_log.plot_log(f, file, epoch)
+        f.seek(0)
+        plot_mre_log(f, file, epoch)
+        f.close()
 
 
 if __name__ == "__main__":

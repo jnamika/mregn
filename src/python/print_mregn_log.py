@@ -140,37 +140,37 @@ def print_error(f, epoch=None):
         print "total_likelihood / length"
         print '\t'.join([str(x) for x in total_likelihood])
 
-def print_mre_log(files, epoch):
-    for file in files:
-        f = open(file, 'r')
-        line = f.readline()
-        if (re.compile(r'^# MRE STATE FILE').match(line)):
-            print_state(f, epoch)
-        if (re.compile(r'^# MRE GATE FILE').match(line)):
-            print_gate(f, epoch)
-        elif (re.compile(r'^# MRE WEIGHT FILE').match(line)):
-            print_weight(f, epoch)
-        elif (re.compile(r'^# MRE THRESHOLD FILE').match(line)):
-            print_threshold(f, epoch)
-        elif (re.compile(r'^# MRE TAU FILE').match(line)):
-            print_tau(f, epoch)
-        elif (re.compile(r'^# MRE SIGMA FILE').match(line)):
-            print_sigma(f, epoch)
-        elif (re.compile(r'^# MRE INIT FILE').match(line)):
-            print_init(f, epoch)
-        elif (re.compile(r'^# MRE ADAPT_LR FILE').match(line)):
-            print_adapt_lr(f, epoch)
-        elif (re.compile(r'^# MRE ERROR FILE').match(line)):
-            print_error(f, epoch)
-        f.close()
+def print_mre_log(f, epoch):
+    line = f.readline()
+    if (re.compile(r'^# MRE STATE FILE').match(line)):
+        print_state(f, epoch)
+    if (re.compile(r'^# MRE GATE FILE').match(line)):
+        print_gate(f, epoch)
+    elif (re.compile(r'^# MRE WEIGHT FILE').match(line)):
+        print_weight(f, epoch)
+    elif (re.compile(r'^# MRE THRESHOLD FILE').match(line)):
+        print_threshold(f, epoch)
+    elif (re.compile(r'^# MRE TAU FILE').match(line)):
+        print_tau(f, epoch)
+    elif (re.compile(r'^# MRE SIGMA FILE').match(line)):
+        print_sigma(f, epoch)
+    elif (re.compile(r'^# MRE INIT FILE').match(line)):
+        print_init(f, epoch)
+    elif (re.compile(r'^# MRE ADAPT_LR FILE').match(line)):
+        print_adapt_lr(f, epoch)
+    elif (re.compile(r'^# MRE ERROR FILE').match(line)):
+        print_error(f, epoch)
 
 def main():
     epoch = None
     if str.isdigit(sys.argv[1]):
         epoch = int(sys.argv[1])
-    args = sys.argv[2:]
-    print_log.print_log(sys.argv[2:], epoch)
-    print_mre_log(sys.argv[2:], epoch)
+    for file in sys.argv[2:]:
+        f = open(file, 'r')
+        print_log.print_log(f, epoch)
+        f.seek(0)
+        print_mre_log(f, epoch)
+        f.close()
 
 
 if __name__ == "__main__":
