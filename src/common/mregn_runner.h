@@ -37,6 +37,11 @@ void init_mregn_runner (
         FILE *mre_fp,
         FILE *gn_fp);
 
+void init_mregn_runner_with_filename (
+        struct mregn_runner *runner,
+        const char *mre_filename,
+        const char *gn_filename);
+
 void free_mregn_runner (struct mregn_runner *runner);
 
 void set_init_state_of_mregn_runner (

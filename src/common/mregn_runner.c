@@ -67,6 +67,28 @@ void init_mregn_runner (
 }
 
 
+void init_mregn_runner_with_filename (
+        struct mregn_runner *runner,
+        const char *mre_filename,
+        const char *gn_filename)
+{
+    FILE *mre_fp, *gn_fp;
+    mre_fp = fopen(mre_filename, "rb");
+    if (mre_fp == NULL) {
+        print_error_msg("cannot open %s", mre_filename);
+        exit(EXIT_FAILURE);
+    }
+    gn_fp = fopen(gn_filename, "rb");
+    if (gn_fp == NULL) {
+        print_error_msg("cannot open %s", gn_filename);
+        exit(EXIT_FAILURE);
+    }
+    init_mregn_runner (runner, mre_fp, gn_fp);
+    fclose(mre_fp);
+    fclose(gn_fp);
+}
+
+
 void free_mregn_runner (struct mregn_runner *runner)
 {
     free_mixture_of_rnn_experts(&runner->mre);

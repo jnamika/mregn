@@ -144,7 +144,7 @@ def print_mre_log(f, epoch):
     line = f.readline()
     if (re.compile(r'^# MRE STATE FILE').match(line)):
         print_state(f, epoch)
-    if (re.compile(r'^# MRE GATE FILE').match(line)):
+    elif (re.compile(r'^# MRE GATE FILE').match(line)):
         print_gate(f, epoch)
     elif (re.compile(r'^# MRE WEIGHT FILE').match(line)):
         print_weight(f, epoch)
@@ -160,6 +160,9 @@ def print_mre_log(f, epoch):
         print_adapt_lr(f, epoch)
     elif (re.compile(r'^# MRE ERROR FILE').match(line)):
         print_error(f, epoch)
+    else:
+        f.seek(0)
+        print_log.print_log(f, epoch)
 
 def main():
     epoch = None
@@ -167,8 +170,6 @@ def main():
         epoch = int(sys.argv[1])
     for file in sys.argv[2:]:
         f = open(file, 'r')
-        print_log.print_log(f, epoch)
-        f.seek(0)
         print_mre_log(f, epoch)
         f.close()
 

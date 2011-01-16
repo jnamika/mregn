@@ -212,7 +212,7 @@ def plot_mre_log(f, file, epoch):
     line = f.readline()
     if (re.compile(r'^# MRE STATE FILE').match(line)):
         plot_state(f, file, epoch)
-    if (re.compile(r'^# MRE GATE FILE').match(line)):
+    elif (re.compile(r'^# MRE GATE FILE').match(line)):
         plot_gate(f, file, epoch)
     elif (re.compile(r'^# MRE WEIGHT FILE').match(line)):
         plot_weight(f, file)
@@ -228,6 +228,9 @@ def plot_mre_log(f, file, epoch):
         plot_adapt_lr(f, file)
     elif (re.compile(r'^# MRE ERROR FILE').match(line)):
         plot_error(f, file)
+    else:
+        f.seek(0)
+        plot_log.plot_log(f, file, epoch)
 
 
 def main():
@@ -236,8 +239,6 @@ def main():
         epoch = int(sys.argv[1])
     for file in sys.argv[2:]:
         f = open(file, 'r')
-        plot_log.plot_log(f, file, epoch)
-        f.seek(0)
         plot_mre_log(f, file, epoch)
         f.close()
 
