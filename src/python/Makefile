@@ -12,7 +12,6 @@ OBJ_DIR = ../../obj/python
 BIN_DIR = ../../bin
 COMMON_DIR = ../common
 RNN_COMMON_DIR = ../../rnn/src/common
-RNN_PY_DIR = ../../rnn/src/python
 
 INCLUDE_DIR := -I. -I$(COMMON_DIR) -I$(RNN_COMMON_DIR)
 LIB_DIR :=
@@ -28,8 +27,8 @@ CFLAGS = $(WARNFLAG) $(STD) $(OPT) $(MACROS) $(INCLUDE_DIR) $(LIB_DIR) $(DEBUG)
 
 vpath %.c $(COMMON_DIR) $(RNN_COMMON_DIR)
 SRCS = mregn_runner.c rnn.c mre.c utils.c mt19937ar.c
-PY_SRCS = mregn_runner.py $(RNN_PY_DIR)/print_log.py $(RNN_PY_DIR)/plot_log.py print_mregn_log.py plot_mregn_log.py $(RNN_PY_DIR)/gen_target.py $(RNN_PY_DIR)/rnn_scale.py 
-SH_SRCS = print-log plot-log $(RNN_PY_DIR)/rnn-scale $(RNN_PY_DIR)/rnn-scale-restore 
+PY_SRCS = mregn_runner.py print_mregn_log.py plot_mregn_log.py mregn_kl_div.py
+SH_SRCS = print-log plot-log mregn-kl-div
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 
 
