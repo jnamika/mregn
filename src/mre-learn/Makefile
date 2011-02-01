@@ -53,7 +53,7 @@ CFLAGS = $(WARNFLAG) $(STD) $(OPT) $(MACROS) $(INCLUDE_DIR) $(LIB_DIR) $(DEBUG)
 
 
 vpath %.c $(COMMON_DIR) $(RNN_COMMON_DIR) $(RNN_LEARN_DIR)
-SRCS = main.c mre.c rnn.c target.c training.c print.c parse.c utils.c mt19937ar.c
+SRCS = main.c mre.c rnn.c target.c training.c print.c parse.c utils.c
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 
 .PHONY: all

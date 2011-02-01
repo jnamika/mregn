@@ -26,7 +26,7 @@ CFLAGS = $(WARNFLAG) $(STD) $(OPT) $(MACROS) $(INCLUDE_DIR) $(LIB_DIR) $(DEBUG)
 
 
 vpath %.c $(COMMON_DIR) $(RNN_COMMON_DIR)
-SRCS = mregn_runner.c rnn.c mre.c utils.c mt19937ar.c
+SRCS = mregn_runner.c rnn.c mre.c utils.c
 PY_SRCS = mregn_runner.py print_mregn_log.py plot_mregn_log.py mregn_kl_div.py
 SH_SRCS = print-log plot-log mregn-kl-div
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)

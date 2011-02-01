@@ -21,7 +21,6 @@
 #ifdef ENABLE_MTRACE
 #include <mcheck.h>
 #endif
-#include "mt19937ar.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

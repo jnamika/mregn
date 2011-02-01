@@ -18,7 +18,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include "mt19937ar.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -64,7 +63,7 @@ static void init_training_main (
 {
     init_genrand(gp->mp.seed);
     for (int i = 0; i < SEED_TRANSIENT; i++) {
-        genrand_int32();
+        xor128();
     }
 
     if (gp->mp.gn_delay_length <= 0) {

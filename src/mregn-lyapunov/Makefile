@@ -53,7 +53,7 @@ CFLAGS = $(WARNFLAG) $(STD) $(OPT) $(MACROS) $(INCLUDE_DIR) $(LIB_DIR) $(DEBUG)
 
 
 vpath %.c $(COMMON_DIR) $(RNN_COMMON_DIR) $(RNN_LEARN_DIR)
-SRCS = main.c lyapunov.c rnn.c mre.c mregn_runner.c mregn_lyapunov.c solver.c utils.c mt19937ar.c
+SRCS = main.c lyapunov.c rnn.c mre.c mregn_runner.c mregn_lyapunov.c solver.c utils.c
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 
 .PHONY: all

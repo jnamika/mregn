@@ -6,7 +6,7 @@ import math
 import mregn_runner
 import rnn_kl_div
 
-class my_runner(mregn_runner.mregn_runner):
+class my_runner(mregn_runner.MREGNRunner):
     def output_type(self):
         return 0
 
@@ -23,6 +23,6 @@ def main():
             divide_num, runner, sys.argv[9:])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
 

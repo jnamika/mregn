@@ -20,11 +20,11 @@ def plot_state(f, filename, epoch):
     for k,v in type.iteritems():
         p = subprocess.Popen(['gnuplot -persist'], stdin=subprocess.PIPE,
                 shell=True)
-        p.stdin.write("set nokey;")
+        p.stdin.write('set nokey;')
         p.stdin.write("set title 'Type=%s  File=%s';" % (k, filename))
         p.stdin.write("set xlabel 'Time step';")
         p.stdin.write("set ylabel '%s';" % k)
-        command = ["plot "]
+        command = ['plot ']
         for i in xrange(v[0]):
             command.append("'%s' u 1:%d w l," % (tmp.name, v[1](i)))
         p.stdin.write(''.join(command)[:-1])
@@ -42,11 +42,11 @@ def plot_gate(f, filename, epoch):
     sys.stdout.flush()
     p = subprocess.Popen(['gnuplot -persist'], stdin=subprocess.PIPE,
             shell=True)
-    p.stdin.write("set nokey;")
+    p.stdin.write('set nokey;')
     p.stdin.write("set title 'Type=Gate  File=%s';" % filename)
     p.stdin.write("set xlabel 'Time step';")
     p.stdin.write("set ylabel 'Gate opening value';")
-    command = ["plot "]
+    command = ['plot ']
     for i in xrange(expert_num):
         command.append("'%s' u 1:%d w l," % (tmp.name, i+2))
     p.stdin.write(''.join(command)[:-1])
@@ -79,12 +79,12 @@ def plot_weight(f, filename):
         for k,v in type.iteritems():
             p = subprocess.Popen(['gnuplot -persist'], stdin=subprocess.PIPE,
                     shell=True)
-            p.stdin.write("set nokey;")
+            p.stdin.write('set nokey;')
             p.stdin.write("set title 'Type=Weight(Expert %d)  File=%s';" % (i,
                 filename))
             p.stdin.write("set xlabel 'Learning epoch';")
             p.stdin.write("set ylabel '%s';" % k)
-            command = ["plot "]
+            command = ['plot ']
             for j in v:
                 command.append("'%s' u 1:%d w l," % (filename, j))
             p.stdin.write(''.join(command)[:-1])
@@ -105,12 +105,12 @@ def plot_threshold(f, filename):
         for k,v in type.iteritems():
             p = subprocess.Popen(['gnuplot -persist'], stdin=subprocess.PIPE,
                     shell=True)
-            p.stdin.write("set nokey;")
+            p.stdin.write('set nokey;')
             p.stdin.write("set title 'Type=Threshold(Expert %d)  File=%s';" % \
                     (i, filename))
             p.stdin.write("set xlabel 'Learning epoch';")
             p.stdin.write("set ylabel '%s';" % k)
-            command = ["plot "]
+            command = ['plot ']
             for j in v:
                 command.append("'%s' u 1:%d w l," % (filename, j))
             p.stdin.write(''.join(command)[:-1])
@@ -123,12 +123,12 @@ def plot_tau(f, filename):
     for i in xrange(expert_num):
         p = subprocess.Popen(['gnuplot -persist'], stdin=subprocess.PIPE,
                 shell=True)
-        p.stdin.write("set nokey;")
+        p.stdin.write('set nokey;')
         p.stdin.write("set title 'Type=Time-constant(Expert %d)  File=%s';" % \
                 (i, filename))
         p.stdin.write("set xlabel 'Learning epoch';")
         p.stdin.write("set ylabel 'Time constant';")
-        command = ["plot "]
+        command = ['plot ']
         for j in xrange(c_state_size):
             command.append("'%s' u 1:%d w l," % (filename, i*expert_num+j+2))
         p.stdin.write(''.join(command)[:-1])
@@ -139,11 +139,11 @@ def plot_sigma(f, filename):
     expert_num = int(params['expert_num'])
     p = subprocess.Popen(['gnuplot -persist'], stdin=subprocess.PIPE,
             shell=True)
-    p.stdin.write("set nokey;")
+    p.stdin.write('set nokey;')
     p.stdin.write("set title 'Type=Variance  File=%s';" % filename)
     p.stdin.write("set xlabel 'Learning epoch';")
     p.stdin.write("set ylabel 'Variance';")
-    command = ["plot "]
+    command = ['plot ']
     for i in xrange(expert_num):
         command.append("'%s' u 1:%d w l," % (filename, 2*i+3))
     p.stdin.write(''.join(command)[:-1])
@@ -162,13 +162,13 @@ def plot_init(f, filename, epoch):
     for i in xrange(expert_num):
         p = subprocess.Popen(['gnuplot -persist'], stdin=subprocess.PIPE,
                 shell=True)
-        p.stdin.write("set nokey;")
+        p.stdin.write('set nokey;')
         p.stdin.write("set title 'Type=Init(Expert %d)  File=%s';" % (i,
             filename))
         p.stdin.write("set xlabel 'Time step';")
         p.stdin.write("set ylabel 'Initial state';")
-        p.stdin.write("set pointsize 3;")
-        command = ["plot "]
+        p.stdin.write('set pointsize 3;')
+        command = ['plot ']
         k = expert_num * i + 2
         for x in index:
             command.append("'%s' u %d:%d w p," % (tmp.name, x[0] + k,
@@ -195,12 +195,12 @@ def plot_error(f, filename):
     for k,v in type.iteritems():
         p = subprocess.Popen(['gnuplot -persist'], stdin=subprocess.PIPE,
                 shell=True)
-        p.stdin.write("set nokey;")
+        p.stdin.write('set nokey;')
         p.stdin.write("set title 'Type=%s  File=%s';" % (k, filename))
         p.stdin.write("set xlabel 'Learning epoch';")
         p.stdin.write("set ylabel '%s';" % v[0])
         p.stdin.write(v[2])
-        command = ["plot "]
+        command = ['plot ']
         for i in xrange(target_num):
             command.append("'%s' u 1:%d w l," % (filename, v[1](i)))
         p.stdin.write(''.join(command)[:-1])
@@ -243,6 +243,6 @@ def main():
         f.close()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
 
