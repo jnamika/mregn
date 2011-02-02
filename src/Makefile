@@ -5,8 +5,8 @@ all:
 	$(MAKE) all -C gn-learn
 	$(MAKE) all -C mregn-generate
 	$(MAKE) all -C mregn-lyapunov
-	$(MAKE) all -C python
-	$(MAKE) all -C unit-test
+	$(MAKE) all -C python CC=gcc
+	$(MAKE) all -C unit-test CC=gcc
 
 .PHONY: clean
 clean:
