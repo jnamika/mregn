@@ -40,7 +40,7 @@
 #include "utils.h"
 
 
-jmp_buf ___g_jbuf;
+jmp_buf _g_jbuf;
 
 
 static void my_shutdown (void)
@@ -56,7 +56,7 @@ int main (void)
     atexit(my_shutdown);
     opterr = 0;
 
-    if (setjmp(___g_jbuf) == 0) {
+    if (setjmp(_g_jbuf) == 0) {
         test_utils();
         test_rnn();
         test_mre();

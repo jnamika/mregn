@@ -435,7 +435,7 @@ static void set_load_file (const char *opt, struct general_parameters *gp)
 
 #define SET_DEFAULT_VALUE_OF_PRINT_INTERVAL_I(FILENAME,OPT) \
     do { \
-        if (!gp->iop.interval_for_##FILENAME.___set_##OPT##_flag) { \
+        if (!gp->iop.interval_for_##FILENAME._set_##OPT##_flag) { \
             gp->iop.interval_for_##FILENAME.OPT = \
                 gp->iop.default_interval.OPT; \
         } \
@@ -489,7 +489,7 @@ static void set_##NAME##_for_##FILENAME (const char *opt, \
         struct general_parameters *gp) \
 { \
     gp->iop.interval_for_##FILENAME.OPT = IN; \
-    gp->iop.interval_for_##FILENAME.___set_##OPT##_flag = 1; \
+    gp->iop.interval_for_##FILENAME._set_##OPT##_flag = 1; \
 }
 
 #define GEN_PRINT_INTERVAL_SETTER(FILENAME) \

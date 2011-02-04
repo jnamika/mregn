@@ -71,6 +71,7 @@ typedef struct analysis_parameters {
     int block_length;
     int divide_num;
     int lyapunov_spectrum_size;
+    double threshold_period;
 } analysis_parameters;
 
 
@@ -89,6 +90,7 @@ typedef struct io_parameters {
     char *closed_error_filename;
     char *lyapunov_filename;
     char *entropy_filename;
+    char *period_filename;
 
     char *save_filename;
     char *load_filename;
@@ -99,10 +101,10 @@ typedef struct io_parameters {
         long init;
         long end;
         int use_logscale_interval;
-        int ___set_interval_flag;
-        int ___set_init_flag;
-        int ___set_end_flag;
-        int ___set_use_logscale_interval_flag;
+        int _set_interval_flag;
+        int _set_init_flag;
+        int _set_end_flag;
+        int _set_use_logscale_interval_flag;
     } default_interval;
     struct print_interval interval_for_state_file;
     struct print_interval interval_for_closed_state_file;
@@ -116,6 +118,7 @@ typedef struct io_parameters {
     struct print_interval interval_for_closed_error_file;
     struct print_interval interval_for_lyapunov_file;
     struct print_interval interval_for_entropy_file;
+    struct print_interval interval_for_period_file;
 
     /* if verbose!=0, explain what is being done */
     int verbose;
