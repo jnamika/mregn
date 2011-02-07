@@ -617,13 +617,14 @@ static void parse_option_and_arg (char *str, char **opt, char **arg)
     char *p, *q;
     p = str;
     while (*p == ' ') { p++; }
-    if ((q = strchr(p, '\n')) != NULL) { *q = '\0'; }
-    if ((q = strchr(p, '#')) != NULL) { *q = '\0'; }
+    if ((q = strpbrk(p, "#\n")) != NULL) { *q = '\0'; }
     if (strlen(p) > 0) {
+        char *r = p + strlen(p) - 1;
+        while (*r == ' ' && r >= p) { *r = '\0'; r--; }
         if ((q = strchr(p, '=')) != NULL) {
             *q = '\0';
-            char *r = q - 1;
-            while (*r == ' ' && r != p) { *r = '\0'; r--; }
+            r = q - 1;
+            while (*r == ' ' && r >= p) { *r = '\0'; r--; }
             q++;
             while (*q == ' ') { q++; }
         } else {
