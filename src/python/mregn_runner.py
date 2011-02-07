@@ -5,9 +5,10 @@ import sys
 import os
 import datetime
 from ctypes import *
+from ctypes.util import find_library
 
-librunner = cdll.LoadLibrary('%s/libmrunner.so' %
-        os.path.dirname(os.path.abspath(sys.argv[0])))
+libpath = find_library('mregnrunner')
+librunner = cdll.LoadLibrary(libpath)
 
 librunner.init_genrand.argtype = c_ulong
 librunner.gn_in_state_from_runner.restype = POINTER(c_double)

@@ -2,7 +2,7 @@
 
 import sys
 import re
-import print_log
+import rnn_print_log
 
 def read_parameter(f):
     r = {}
@@ -35,10 +35,10 @@ def read_parameter(f):
 
 
 def print_state(f, epoch=None):
-    print_log.print_state(f, epoch)
+    rnn_print_log.print_state(f, epoch)
 
 def print_gate(f, epoch=None):
-    print_log.print_state(f, epoch)
+    rnn_print_log.print_state(f, epoch)
 
 def print_weight(f, epoch=None):
     params = read_parameter(f)
@@ -46,7 +46,7 @@ def print_weight(f, epoch=None):
     in_state_size = int(params['in_state_size'])
     c_state_size = int(params['c_state_size'])
     out_state_size = int(params['out_state_size'])
-    s = print_log.current_line(f, epoch)
+    s = rnn_print_log.current_line(f, epoch)
     if s != None:
         epoch = s[0]
         print 'epoch : %s' % epoch
@@ -77,7 +77,7 @@ def print_threshold(f, epoch=None):
     expert_num = int(params['expert_num'])
     c_state_size = int(params['c_state_size'])
     out_state_size = int(params['out_state_size'])
-    s = print_log.current_line(f, epoch)
+    s = rnn_print_log.current_line(f, epoch)
     if s != None:
         epoch = s[0]
         print 'epoch : %s' % epoch
@@ -97,7 +97,7 @@ def print_tau(f, epoch=None):
     params = read_parameter(f)
     expert_num = int(params['expert_num'])
     c_state_size = int(params['c_state_size'])
-    s = print_log.current_line(f, epoch)
+    s = rnn_print_log.current_line(f, epoch)
     if s != None:
         epoch = s[0]
         print 'epoch : %s' % epoch
@@ -110,7 +110,7 @@ def print_tau(f, epoch=None):
             print '\t'.join([str(x) for x in tau])
 
 def print_sigma(f, epoch=None):
-    s = print_log.current_line(f, epoch)
+    s = rnn_print_log.current_line(f, epoch)
     if s != None:
         epoch = s[0]
         sigma = s[1::2]
@@ -120,13 +120,13 @@ def print_sigma(f, epoch=None):
         print 'variance : %s' % '\t'.join([str(x) for x in variance])
 
 def print_init(f, epoch=None):
-    print_log.print_init(f, epoch)
+    rnn_print_log.print_init(f, epoch)
 
 def print_adapt_lr(f, epoch=None):
-    print_log.print_adapt_lr(f, epoch)
+    rnn_print_log.print_adapt_lr(f, epoch)
 
 def print_error(f, epoch=None):
-    s = print_log.current_line(f, epoch)
+    s = rnn_print_log.current_line(f, epoch)
     if s != None:
         epoch = s[0]
         error = s[1::3]
@@ -140,7 +140,7 @@ def print_error(f, epoch=None):
         print 'total_likelihood / length'
         print '\t'.join([str(x) for x in total_likelihood])
 
-def print_mre_log(f, epoch):
+def print_log(f, epoch):
     line = f.readline()
     if (re.compile(r'^# MRE STATE FILE').match(line)):
         print_state(f, epoch)
@@ -162,7 +162,7 @@ def print_mre_log(f, epoch):
         print_error(f, epoch)
     else:
         f.seek(0)
-        print_log.print_log(f, epoch)
+        rnn_print_log.print_log(f, epoch)
 
 def main():
     epoch = None
@@ -170,7 +170,7 @@ def main():
         epoch = int(sys.argv[1])
     for file in sys.argv[2:]:
         f = open(file, 'r')
-        print_mre_log(f, epoch)
+        print_log(f, epoch)
         f.close()
 
 

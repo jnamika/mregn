@@ -223,10 +223,11 @@ static void init_rnn (
         }
         get_target_sequence(mre->mre_s + i, &sequence, &size);
         rnn_add_target(rnn, mre->mre_s[i].length - gp->mp.gn_delay_length,
-                sequence, sequence + gp->mp.gn_delay_length);
+                (const double* const*)sequence, (const double* const*)sequence +
+                gp->mp.gn_delay_length);
     }
-    free(sequence[0]);
-    free(sequence);
+    FREE(sequence[0]);
+    FREE(sequence);
     for (int i = 0; i < mre->series_num; i++) {
         mre->mre_s[i].length = rnn->rnn_s[i].length;
         for (int j = 0; j < mre->expert_num; j++) {

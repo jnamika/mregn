@@ -129,8 +129,8 @@ void init_mixture_of_rnn_experts (
 void mre_add_target (
         struct mixture_of_rnn_experts *mre,
         int length,
-        double **input,
-        double **target)
+        const double* const* input,
+        const double* const* target)
 {
     mre->series_num++;
     REALLOC(mre->mre_s, mre->series_num);
@@ -152,7 +152,7 @@ void mre_clean_target (struct mixture_of_rnn_experts *mre)
     for (int i = 0; i < mre->series_num; i++) {
         free_mre_state(mre->mre_s + i);
     }
-    free(mre->mre_s);
+    FREE(mre->mre_s);
     mre->mre_s = NULL;
     mre->series_num = 0;
 }
@@ -166,34 +166,14 @@ void mre_state_alloc (struct mre_state *mre_s)
 
     MALLOC(mre_s->joint_likelihood, length);
 
-    MALLOC(mre_s->gate, expert_num);
-    MALLOC(mre_s->beta, expert_num);
-    MALLOC(mre_s->delta_beta, expert_num);
-    MALLOC(mre_s->generation_likelihood, expert_num);
-    MALLOC(mre_s->discrimination_likelihood, expert_num);
-    MALLOC(mre_s->prior_likelihood, expert_num);
-    MALLOC(mre_s->gate[0], length * expert_num);
-    MALLOC(mre_s->beta[0], length * expert_num);
-    MALLOC(mre_s->delta_beta[0], length * expert_num);
-    MALLOC(mre_s->generation_likelihood[0], length * expert_num);
-    MALLOC(mre_s->discrimination_likelihood[0], length * expert_num);
-    MALLOC(mre_s->prior_likelihood[0], length * expert_num);
-    for (int i = 0; i < expert_num; i++) {
-        mre_s->gate[i] = mre_s->gate[0] + (i * length);
-        mre_s->beta[i] = mre_s->beta[0] + (i * length);
-        mre_s->delta_beta[i] = mre_s->delta_beta[0] + (i * length);
-        mre_s->generation_likelihood[i] = mre_s->generation_likelihood[0] +
-            (i * length);
-        mre_s->discrimination_likelihood[i] =
-            mre_s->discrimination_likelihood[0] + (i * length);
-        mre_s->prior_likelihood[i] = mre_s->prior_likelihood[0] + (i * length);
-    }
+    MALLOC2(mre_s->gate, expert_num, length);
+    MALLOC2(mre_s->beta, expert_num, length);
+    MALLOC2(mre_s->delta_beta, expert_num, length);
+    MALLOC2(mre_s->generation_likelihood, expert_num, length);
+    MALLOC2(mre_s->discrimination_likelihood, expert_num, length);
+    MALLOC2(mre_s->prior_likelihood, expert_num, length);
 
-    MALLOC(mre_s->out_state, length);
-    MALLOC(mre_s->out_state[0], out_state_size * length);
-    for (int i = 0; i < length; i++) {
-        mre_s->out_state[i] = mre_s->out_state[0] + (i * out_state_size);
-    }
+    MALLOC2(mre_s->out_state, length, out_state_size);
     MALLOC(mre_s->expert_rnn_s, expert_num);
 
 #ifdef ENABLE_ADAPTIVE_LEARNING_RATE
@@ -205,40 +185,33 @@ void mre_state_alloc (struct mre_state *mre_s)
 
 void free_mre_state (struct mre_state *mre_s)
 {
-    free(mre_s->joint_likelihood);
-    free(mre_s->gate[0]);
-    free(mre_s->beta[0]);
-    free(mre_s->delta_beta[0]);
-    free(mre_s->generation_likelihood[0]);
-    free(mre_s->discrimination_likelihood[0]);
-    free(mre_s->prior_likelihood[0]);
-    free(mre_s->out_state[0]);
-    free(mre_s->gate);
-    free(mre_s->beta);
-    free(mre_s->delta_beta);
-    free(mre_s->generation_likelihood);
-    free(mre_s->discrimination_likelihood);
-    free(mre_s->prior_likelihood);
-    free(mre_s->out_state);
-    free(mre_s->expert_rnn_s);
+    FREE(mre_s->joint_likelihood);
+    FREE2(mre_s->gate);
+    FREE2(mre_s->beta);
+    FREE2(mre_s->delta_beta);
+    FREE2(mre_s->generation_likelihood);
+    FREE2(mre_s->discrimination_likelihood);
+    FREE2(mre_s->prior_likelihood);
+    FREE2(mre_s->out_state);
+    FREE(mre_s->expert_rnn_s);
 #ifdef ENABLE_ADAPTIVE_LEARNING_RATE
-    free(mre_s->tmp_gate);
-    free(mre_s->tmp_beta);
+    FREE(mre_s->tmp_gate);
+    FREE(mre_s->tmp_beta);
 #endif
 }
 
 
 void free_mixture_of_rnn_experts (struct mixture_of_rnn_experts *mre)
 {
-    free(mre->gamma);
+    FREE(mre->gamma);
     for (int i = 0; i < mre->expert_num; i++) {
         free_recurrent_neural_network(mre->expert_rnn + i);
     }
-    free(mre->expert_rnn);
+    FREE(mre->expert_rnn);
     for (int i = 0; i < mre->series_num; i++) {
         free_mre_state(mre->mre_s + i);
     }
-    free(mre->mre_s);
+    FREE(mre->mre_s);
     mre->mre_s = NULL;
     mre->series_num = 0;
 }

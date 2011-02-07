@@ -88,8 +88,8 @@ void free_mixture_of_rnn_experts (struct mixture_of_rnn_experts *mre);
 void mre_add_target (
         struct mixture_of_rnn_experts *mre,
         int length,
-        double **input,
-        double **target);
+        const double* const* input,
+        const double* const* target);
 
 void mre_clean_target (struct mixture_of_rnn_experts *mre);
 

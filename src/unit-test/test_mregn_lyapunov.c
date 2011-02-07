@@ -67,10 +67,7 @@ static void test_mre_jacobian_for_lyapunov_spectrum (
     double **matrix;
     struct mregn_lyapunov_info ml_info;
     init_mregn_lyapunov_info(&ml_info, mre_s, gn_s, 1, 1, 0);
-    MALLOC(matrix, ml_info.dimension);
-    for (int i = 0; i < ml_info.dimension; i++) {
-        MALLOC(matrix[i], ml_info.dimension);
-    }
+    MALLOC2(matrix, ml_info.dimension, ml_info.dimension);
 
     assert_exit_call(mre_jacobian_for_lyapunov_spectrum, NULL,
             ml_info.dimension, 0, matrix, &ml_info);
@@ -94,10 +91,7 @@ static void test_mre_jacobian_for_lyapunov_spectrum (
     mu_assert(mre_jacobian_for_lyapunov_spectrum(ml_info.state[min_length-1],
                 ml_info.dimension, min_length-1, matrix, &ml_info) != NULL);
 
-    for (int i = 0; i < ml_info.dimension; i++) {
-        free(matrix[i]);
-    }
-    free(matrix);
+    FREE2(matrix);
     free_mregn_lyapunov_info(&ml_info);
 }
 

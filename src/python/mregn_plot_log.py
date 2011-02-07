@@ -4,15 +4,15 @@ import sys
 import re
 import subprocess
 import tempfile
-import print_mregn_log
-import plot_log
+import mregn_print_log
+import rnn_plot_log
 
 def plot_state(f, filename, epoch):
-    params = print_mregn_log.read_parameter(f)
+    params = mregn_print_log.read_parameter(f)
     out_state_size = int(params['out_state_size'])
     tmp = tempfile.NamedTemporaryFile()
     sys.stdout = tmp
-    print_mregn_log.print_state(f, epoch)
+    mregn_print_log.print_state(f, epoch)
     sys.stdout.flush()
     type = {}
     type['Target'] = (out_state_size, lambda x: 2 * x + 2)
@@ -34,11 +34,11 @@ def plot_state(f, filename, epoch):
     sys.stdout = sys.__stdout__
 
 def plot_gate(f, filename, epoch):
-    params = print_mregn_log.read_parameter(f)
+    params = mregn_print_log.read_parameter(f)
     expert_num = int(params['expert_num'])
     tmp = tempfile.NamedTemporaryFile()
     sys.stdout = tmp
-    print_mregn_log.print_state(f, epoch)
+    mregn_print_log.print_state(f, epoch)
     sys.stdout.flush()
     p = subprocess.Popen(['gnuplot -persist'], stdin=subprocess.PIPE,
             shell=True)
@@ -56,7 +56,7 @@ def plot_gate(f, filename, epoch):
     sys.stdout = sys.__stdout__
 
 def plot_weight(f, filename):
-    params = print_mregn_log.read_parameter(f)
+    params = mregn_print_log.read_parameter(f)
     expert_num = int(params['expert_num'])
     in_state_size = int(params['in_state_size'])
     c_state_size = int(params['c_state_size'])
@@ -91,7 +91,7 @@ def plot_weight(f, filename):
             p.stdin.write('\n')
 
 def plot_threshold(f, filename):
-    params = print_mregn_log.read_parameter(f)
+    params = mregn_print_log.read_parameter(f)
     expert_num = int(params['expert_num'])
     c_state_size = int(params['c_state_size'])
     out_state_size = int(params['out_state_size'])
@@ -117,7 +117,7 @@ def plot_threshold(f, filename):
             p.stdin.write('\n')
 
 def plot_tau(f, filename):
-    params = print_mregn_log.read_parameter(f)
+    params = mregn_print_log.read_parameter(f)
     expert_num = int(params['expert_num'])
     c_state_size = int(params['c_state_size'])
     for i in xrange(expert_num):
@@ -135,7 +135,7 @@ def plot_tau(f, filename):
         p.stdin.write('\n')
 
 def plot_sigma(f, filename):
-    params = print_mregn_log.read_parameter(f)
+    params = mregn_print_log.read_parameter(f)
     expert_num = int(params['expert_num'])
     p = subprocess.Popen(['gnuplot -persist'], stdin=subprocess.PIPE,
             shell=True)
@@ -150,12 +150,12 @@ def plot_sigma(f, filename):
     p.stdin.write('\n')
 
 def plot_init(f, filename, epoch):
-    params = print_mregn_log.read_parameter(f)
+    params = mregn_print_log.read_parameter(f)
     expert_num = int(params['expert_num'])
     c_state_size = int(params['c_state_size'])
     tmp = tempfile.NamedTemporaryFile()
     sys.stdout = tmp
-    print_mregn_log.print_init(f, epoch)
+    mregn_print_log.print_init(f, epoch)
     sys.stdout.flush()
     index = [(2*x,(2*x+1)%c_state_size) for x in xrange(c_state_size) if 2*x <
             c_state_size]
@@ -180,10 +180,10 @@ def plot_init(f, filename, epoch):
     sys.stdout = sys.__stdout__
 
 def plot_adapt_lr(f, filename):
-    plot_log.plot_adapt_lr(f, filename)
+    rnn_plot_log.plot_adapt_lr(f, filename)
 
 def plot_error(f, filename):
-    params = print_mregn_log.read_parameter(f)
+    params = mregn_print_log.read_parameter(f)
     target_num = int(params['target_num'])
     type = {}
     type['Error'] = ('Error / (Length times Dimension)', lambda x: 3 * x + 2, \
@@ -208,7 +208,7 @@ def plot_error(f, filename):
         p.stdin.write('exit\n')
         p.wait()
 
-def plot_mre_log(f, file, epoch):
+def plot_log(f, file, epoch):
     line = f.readline()
     if (re.compile(r'^# MRE STATE FILE').match(line)):
         plot_state(f, file, epoch)
@@ -230,7 +230,7 @@ def plot_mre_log(f, file, epoch):
         plot_error(f, file)
     else:
         f.seek(0)
-        plot_log.plot_log(f, file, epoch)
+        rnn_plot_log.plot_log(f, file, epoch)
 
 
 def main():
@@ -239,7 +239,7 @@ def main():
         epoch = int(sys.argv[1])
     for file in sys.argv[2:]:
         f = open(file, 'r')
-        plot_mre_log(f, file, epoch)
+        plot_log(f, file, epoch)
         f.close()
 
 

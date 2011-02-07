@@ -53,7 +53,7 @@ static void fopen_array (
             goto error;
         }
     }
-    free(filename);
+    FREE(filename);
     return;
 error:
     exit(EXIT_FAILURE);
@@ -151,19 +151,19 @@ void free_output_files (struct output_files *fp_list)
         for (int i = 0; i < fp_list->array_size; i++) {
             fclose(fp_list->fp_wstate_array[i]);
         }
-        free(fp_list->fp_wstate_array);
+        FREE(fp_list->fp_wstate_array);
     }
     if (fp_list->fp_wclosed_state_array) {
         for (int i = 0; i < fp_list->array_size; i++) {
             fclose(fp_list->fp_wclosed_state_array[i]);
         }
-        free(fp_list->fp_wclosed_state_array);
+        FREE(fp_list->fp_wclosed_state_array);
     }
     if (fp_list->fp_wgate_array) {
         for (int i = 0; i < fp_list->array_size; i++) {
             fclose(fp_list->fp_wgate_array[i]);
         }
-        free(fp_list->fp_wgate_array);
+        FREE(fp_list->fp_wgate_array);
     }
     if (fp_list->fp_wweight) {
         fclose(fp_list->fp_wweight);

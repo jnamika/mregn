@@ -136,13 +136,9 @@ void assert_effect_mre_learn (struct mixture_of_rnn_experts *mre)
     mre_forward_backward_dynamics_forall(mre);
 #ifdef ENABLE_ATTRACTION_OF_INIT_C
     double ***mean, ***variance;
-    MALLOC(mean, mre->series_num);
-    MALLOC(variance, mre->series_num);
-    MALLOC(mean[0], mre->series_num * mre->expert_num);
-    MALLOC(variance[0], mre->series_num * mre->expert_num);
+    MALLOC2(mean, mre->series_num, mre->expert_num);
+    MALLOC2(variance, mre->series_num, mre->expert_num);
     for (int i = 0; i < mre->series_num; i++) {
-        mean[i] = mean[0] + i * mre->expert_num;
-        variance[i] = variance[0] + i * mre->expert_num;
         for (int j = 0; j < mre->expert_num; j++) {
             MALLOC(mean[i][j], mre->expert_rnn[j].rnn_p.c_state_size);
             MALLOC(variance[i][j], mre->expert_rnn[j].rnn_p.c_state_size);
@@ -165,14 +161,12 @@ void assert_effect_mre_learn (struct mixture_of_rnn_experts *mre)
     next_post_dist = get_posterior_distribution(mre, mean, variance);
     for (int i = 0; i < mre->series_num; i++) {
         for (int j = 0; j < mre->expert_num; j++) {
-            free(mean[i][j]);
-            free(variance[i][j]);
+            FREE(mean[i][j]);
+            FREE(variance[i][j]);
         }
     }
-    free(mean[0]);
-    free(mean);
-    free(variance[0]);
-    free(variance);
+    FREE2(mean);
+    FREE2(variance);
 #else
     next_post_dist = get_posterior_distribution(mre);
 #endif
@@ -977,13 +971,9 @@ void test_mre_state_setup (
     const int out_state_size = mre->out_state_size;
     for (int i = 0; i < target_num; i++) {
         double **input, **target;
-        MALLOC(input, target_length[i]);
-        MALLOC(target, target_length[i]);
-        MALLOC(input[0], target_length[i] * in_state_size);
-        MALLOC(target[0], target_length[i] * out_state_size);
+        MALLOC2(input, target_length[i], in_state_size);
+        MALLOC2(target, target_length[i], out_state_size);
         for (int n = 0; n < target_length[i]; n++) {
-            input[n] = input[0] + (in_state_size * n);
-            target[n] = target[0] + (out_state_size * n);
             for (int j = 0; j < in_state_size; j++) {
                 input[n][j] = genrand_real1();
             }
@@ -991,11 +981,10 @@ void test_mre_state_setup (
                 target[n][j] = genrand_real1();
             }
         }
-        mre_add_target(mre, target_length[i], input, target);
-        free(input[0]);
-        free(target[0]);
-        free(input);
-        free(target);
+        mre_add_target(mre, target_length[i], (const double* const*)input,
+                (const double* const*)target);
+        FREE2(input);
+        FREE2(target);
     }
 }
 

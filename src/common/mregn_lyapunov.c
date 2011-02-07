@@ -73,43 +73,24 @@ void mregn_lyapunov_info_alloc (struct mregn_lyapunov_info *ml_info)
     const struct mre_state *mre_s = ml_info->mre_s;
     const int tmp_in = gn_s->rnn_p->in_state_size + gn_s->rnn_p->c_state_size;
     const int tmp_out = gn_s->rnn_p->out_state_size + gn_s->rnn_p->c_state_size;
-    MALLOC(ml_info->tmp_gn_matrix, tmp_out);
-    MALLOC(ml_info->tmp_gn_matrix[0], tmp_out * tmp_in);
-    for (int i = 1; i < tmp_out ; i++) {
-        ml_info->tmp_gn_matrix[i] = ml_info->tmp_gn_matrix[0] + i * tmp_in;
-    }
-
+    MALLOC2(ml_info->tmp_gn_matrix, tmp_out, tmp_in);
     MALLOC(ml_info->tmp_mre_matrix, mre_s->mre->expert_num);
     for (int i = 0; i < mre_s->mre->expert_num; i++) {
         int tmp_dimension = mre_s->expert_rnn_s[i]->rnn_p->out_state_size +
             mre_s->expert_rnn_s[i]->rnn_p->c_state_size;
-        MALLOC(ml_info->tmp_mre_matrix[i], tmp_dimension);
-        MALLOC(ml_info->tmp_mre_matrix[i][0], tmp_dimension * tmp_dimension);
-        for (int j = 1; j < tmp_dimension; j++) {
-            ml_info->tmp_mre_matrix[i][j] = ml_info->tmp_mre_matrix[i][0] + j *
-                tmp_dimension;
-        }
+        MALLOC2(ml_info->tmp_mre_matrix[i], tmp_dimension, tmp_dimension);
     }
-
-    MALLOC(ml_info->state, ml_info->length);
-    MALLOC(ml_info->state[0], ml_info->length * ml_info->dimension);
-    for (int i = 1; i < ml_info->length; i++) {
-        ml_info->state[i] = ml_info->state[0] + i * ml_info->dimension;
-    }
+    MALLOC2(ml_info->state, ml_info->length, ml_info->dimension);
 }
 
 void free_mregn_lyapunov_info (struct mregn_lyapunov_info *ml_info)
 {
-    free(ml_info->tmp_gn_matrix[0]);
-    free(ml_info->tmp_gn_matrix);
+    FREE2(ml_info->tmp_gn_matrix);
     for (int i = 0; i < ml_info->expert_num; i++) {
-        free(ml_info->tmp_mre_matrix[i][0]);
-        free(ml_info->tmp_mre_matrix[i]);
+        FREE2(ml_info->tmp_mre_matrix[i]);
     }
-    free(ml_info->tmp_mre_matrix);
-
-    free(ml_info->state[0]);
-    free(ml_info->state);
+    FREE(ml_info->tmp_mre_matrix);
+    FREE2(ml_info->state);
 }
 
 

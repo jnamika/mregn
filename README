@@ -14,10 +14,10 @@ The package supports
 
 === Installation ===
 
-Type `make' to build the `mre-learn', `gn-learn' and `mregn-generate' programs.
+First, type `./autogen.sh' in the current directory to create configure file.
+Next, type `./configure' and when it finishes, type `make'. This will create `mre-learn', `gn-learn' and `mregn-generate'.
 Run them with the argument `-h' to show the usages of them.
 
-There are some other useful programs in this package.
 
 
 === Example ===

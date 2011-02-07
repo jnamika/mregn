@@ -198,34 +198,31 @@ static void init_parameters (struct general_parameters *gp)
 
 static void free_parameters (struct general_parameters *gp)
 {
-    free(gp->mp.connection_i2c);
-    free(gp->mp.connection_c2c);
-    free(gp->mp.connection_c2o);
-    free(gp->mp.const_init_c);
-    free(gp->mp.init_tau);
-    free(gp->iop.state_filename);
-    free(gp->iop.mre_state_filename);
-    free(gp->iop.closed_state_filename);
-    free(gp->iop.closed_mre_state_filename);
-    free(gp->iop.weight_filename);
-    free(gp->iop.threshold_filename);
-    free(gp->iop.tau_filename);
-    free(gp->iop.init_filename);
-    free(gp->iop.adapt_lr_filename);
-    free(gp->iop.error_filename);
-    free(gp->iop.closed_error_filename);
-    free(gp->iop.lyapunov_filename);
-    free(gp->iop.entropy_filename);
-    free(gp->iop.save_filename);
-    free(gp->iop.load_filename);
-    free(gp->inp.has_connection_ci[0]);
-    free(gp->inp.has_connection_cc[0]);
-    free(gp->inp.has_connection_oc[0]);
-    free(gp->inp.has_connection_ci);
-    free(gp->inp.has_connection_cc);
-    free(gp->inp.has_connection_oc);
-    free(gp->inp.const_init_c);
-    free(gp->inp.init_tau);
+    FREE(gp->mp.connection_i2c);
+    FREE(gp->mp.connection_c2c);
+    FREE(gp->mp.connection_c2o);
+    FREE(gp->mp.const_init_c);
+    FREE(gp->mp.init_tau);
+    FREE(gp->iop.state_filename);
+    FREE(gp->iop.mre_state_filename);
+    FREE(gp->iop.closed_state_filename);
+    FREE(gp->iop.closed_mre_state_filename);
+    FREE(gp->iop.weight_filename);
+    FREE(gp->iop.threshold_filename);
+    FREE(gp->iop.tau_filename);
+    FREE(gp->iop.init_filename);
+    FREE(gp->iop.adapt_lr_filename);
+    FREE(gp->iop.error_filename);
+    FREE(gp->iop.closed_error_filename);
+    FREE(gp->iop.lyapunov_filename);
+    FREE(gp->iop.entropy_filename);
+    FREE(gp->iop.save_filename);
+    FREE(gp->iop.load_filename);
+    FREE2(gp->inp.has_connection_ci);
+    FREE2(gp->inp.has_connection_cc);
+    FREE2(gp->inp.has_connection_oc);
+    FREE(gp->inp.const_init_c);
+    FREE(gp->inp.init_tau);
 }
 
 
@@ -667,7 +664,7 @@ static void read_config_file (FILE *fp, struct general_parameters *gp)
             }
         }
     }
-    free(str);
+    FREE(str);
 }
 
 static void read_options (int argc, char *argv[], struct general_parameters *gp)
@@ -760,23 +757,10 @@ static void setup_parameters (
     gp->inp.adapt_lr = 1.0;
     gp->inp.init_epoch = 0;
     const int in_state_size = (mre->expert_num + mre->in_state_size);
-    MALLOC(gp->inp.has_connection_ci, gp->mp.c_state_size);
-    MALLOC(gp->inp.has_connection_cc, gp->mp.c_state_size);
-    MALLOC(gp->inp.has_connection_oc, mre->expert_num);
-    MALLOC(gp->inp.has_connection_ci[0], gp->mp.c_state_size * in_state_size);
-    MALLOC(gp->inp.has_connection_cc[0], gp->mp.c_state_size *
+    MALLOC2(gp->inp.has_connection_ci, gp->mp.c_state_size, in_state_size);
+    MALLOC2(gp->inp.has_connection_cc, gp->mp.c_state_size,
             gp->mp.c_state_size);
-    MALLOC(gp->inp.has_connection_oc[0], mre->expert_num * gp->mp.c_state_size);
-    for (int i = 0; i < gp->mp.c_state_size; i++) {
-        gp->inp.has_connection_ci[i] = gp->inp.has_connection_ci[0] + i *
-            in_state_size;
-        gp->inp.has_connection_cc[i] = gp->inp.has_connection_cc[0] + i *
-            gp->mp.c_state_size;
-    }
-    for (int i = 0; i < mre->expert_num; i++) {
-        gp->inp.has_connection_oc[i] = gp->inp.has_connection_oc[0] + i *
-            gp->mp.c_state_size;
-    }
+    MALLOC2(gp->inp.has_connection_oc, mre->expert_num, gp->mp.c_state_size);
     str_to_connection(gp->mp.connection_i2c, in_state_size,
             gp->mp.c_state_size, gp->inp.has_connection_ci);
     str_to_connection(gp->mp.connection_c2c, gp->mp.c_state_size,

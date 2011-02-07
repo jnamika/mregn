@@ -25,17 +25,9 @@
 #endif
 
 #include "minunit.h"
-#include "test_utils.h"
-#include "test_rnn.h"
 #include "test_mre.h"
 #include "test_mregn.h"
-#include "test_entropy.h"
-#include "test_solver.h"
-#include "test_rnn_lyapunov.h"
 #include "test_mregn_lyapunov.h"
-#include "test_target.h"
-#include "test_parse.h"
-#include "test_rnn_runner.h"
 #include "test_mregn_runner.h"
 #include "utils.h"
 
@@ -57,17 +49,9 @@ int main (void)
     opterr = 0;
 
     if (setjmp(_g_jbuf) == 0) {
-        test_utils();
-        test_rnn();
         test_mre();
         test_mregn();
-        test_entropy();
-        test_solver();
-        test_rnn_lyapunov();
         test_mregn_lyapunov();
-        test_target();
-        test_parse();
-        test_rnn_runner();
         test_mregn_runner();
     } else {
         print_error_msg("exit(3) was called due to an unanticipated error\n");

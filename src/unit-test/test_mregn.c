@@ -180,10 +180,8 @@ void test_gn_state_setup (
     const int in_state_size = mre->in_state_size;
     for (int i = 0; i < mre->series_num; i++) {
         double **input, **target;
-        MALLOC(input, mre->mre_s[i].length);
-        MALLOC(input[0], mre->mre_s[i].length * (expert_num + in_state_size));
+        MALLOC2(input, mre->mre_s[i].length, expert_num + in_state_size);
         for (int n = 0; n < mre->mre_s[i].length; n++) {
-            input[n] = input[0] + (expert_num + in_state_size) * n;
             for (int j = 0; j < expert_num; j++) {
                 input[n][j] = mre->mre_s[i].gate[j][n];
             }
@@ -193,14 +191,13 @@ void test_gn_state_setup (
             }
         }
         target = input + gn_delay_length;
-        rnn_add_target(gn, mre->mre_s[i].length - gn_delay_length, input,
-                target);
+        rnn_add_target(gn, mre->mre_s[i].length - gn_delay_length,
+                (const double* const*)input, (const double* const*)target);
         mre->mre_s[i].length -= gn_delay_length;
         for (int j = 0; j < expert_num; j++) {
             mre->expert_rnn[j].rnn_s[i].length -= gn_delay_length;
         }
-        free(input[0]);
-        free(input);
+        FREE2(input);
     }
 }
 

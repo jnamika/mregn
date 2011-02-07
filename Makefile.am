@@ -1,0 +1,2 @@
+SUBDIRS = src rnn
+ACLOCAL_AMFLAGS = -I m4
