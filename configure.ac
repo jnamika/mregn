@@ -17,7 +17,7 @@ AC_PROG_LIBTOOL
 AC_CHECK_LIB([m], [main])
 
 # Checks for header files.
-AC_CHECK_HEADERS([float.h limits.h stddef.h stdint.h stdlib.h string.h unistd.h])
+AC_CHECK_HEADERS([limits.h stddef.h stdlib.h string.h unistd.h])
 AC_HEADER_ASSERT
 
 AC_ARG_ENABLE([mtrace],
@@ -37,13 +37,10 @@ fi
 AC_C_INLINE
 AC_C_RESTRICT
 AC_TYPE_SIZE_T
-AC_TYPE_SSIZE_T
-AC_TYPE_UINT32_T
 
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_FUNC_STRTOD
 AC_CHECK_FUNCS([atexit memmove memset pow sqrt strchr strpbrk strstr strtoul])
 
 AC_CONFIG_FILES([Makefile
@@ -53,12 +50,6 @@ AC_CONFIG_FILES([Makefile
                  src/mregn-generate/Makefile
                  src/mregn-lyapunov/Makefile
                  src/python/Makefile
-                 src/unit-test/Makefile
-                 rnn/Makefile
-                 rnn/src/Makefile
-                 rnn/src/python/Makefile
-                 rnn/src/rnn-generate/Makefile
-                 rnn/src/rnn-learn/Makefile
-                 rnn/src/rnn-lyapunov/Makefile
-                 rnn/src/unit-test/Makefile])
+                 src/unit-test/Makefile])
+AC_CONFIG_SUBDIRS([rnn])
 AC_OUTPUT

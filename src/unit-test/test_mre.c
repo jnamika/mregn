@@ -19,6 +19,10 @@
 #include <string.h>
 #include <math.h>
 
+#define TEST_CODE
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "minunit.h"
 #include "my_assert.h"
 #include "utils.h"
@@ -207,11 +211,11 @@ void assert_effect_mre_learn_with_adapt_lr (
 static void test_init_mixture_of_rnn_experts (void)
 {
     struct mixture_of_rnn_experts mre;
-    assert_exit_call(init_mixture_of_rnn_experts, &mre, 0, 0, 1, 1);
-    assert_exit_call(init_mixture_of_rnn_experts, &mre, 1, -1, 1, 1);
-    assert_exit_call(init_mixture_of_rnn_experts, &mre, 1, 0, 0, 1);
-    assert_exit_call(init_mixture_of_rnn_experts, &mre, 1, 0, 1, 0);
-    assert_exit_nocall(init_mixture_of_rnn_experts, &mre, 1, 0, 1, 1);
+    assert_exit(init_mixture_of_rnn_experts, &mre, 0, 0, 1, 1);
+    assert_exit(init_mixture_of_rnn_experts, &mre, 1, -1, 1, 1);
+    assert_exit(init_mixture_of_rnn_experts, &mre, 1, 0, 0, 1);
+    assert_exit(init_mixture_of_rnn_experts, &mre, 1, 0, 1, 0);
+    assert_noexit(init_mixture_of_rnn_experts, &mre, 1, 0, 1, 1);
     free_mixture_of_rnn_experts(&mre);
 }
 
@@ -222,8 +226,8 @@ static void test_init_mre_state (void)
 
     init_mixture_of_rnn_experts(&mre, 1, 0, 1, 1);
 
-    assert_exit_call(init_mre_state, &mre_s, &mre, 0);
-    assert_exit_nocall(init_mre_state, &mre_s, &mre, 1);
+    assert_exit(init_mre_state, &mre_s, &mre, 0);
+    assert_noexit(init_mre_state, &mre_s, &mre, 1);
 
     free_mre_state(&mre_s);
     free_mixture_of_rnn_experts(&mre);

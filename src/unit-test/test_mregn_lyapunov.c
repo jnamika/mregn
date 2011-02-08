@@ -20,6 +20,10 @@
 #include <string.h>
 #include <math.h>
 
+#define TEST_CODE
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "minunit.h"
 #include "my_assert.h"
 #include "utils.h"
@@ -37,15 +41,14 @@ static void test_init_mregn_lyapunov_info (
         const struct rnn_state *gn_s)
 {
     struct mregn_lyapunov_info ml_info;
-    assert_exit_call(init_mregn_lyapunov_info, &ml_info, mre_s, gn_s, 0, 1, 0);
-    assert_exit_call(init_mregn_lyapunov_info, &ml_info, mre_s, gn_s, 1, 0, 0);
-    assert_exit_call(init_mregn_lyapunov_info, &ml_info, mre_s, gn_s, 1, 1, -1);
-    assert_exit_call(init_mregn_lyapunov_info, &ml_info, mre_s, gn_s, 1, 1,
+    assert_exit(init_mregn_lyapunov_info, &ml_info, mre_s, gn_s, 0, 1, 0);
+    assert_exit(init_mregn_lyapunov_info, &ml_info, mre_s, gn_s, 1, 0, 0);
+    assert_exit(init_mregn_lyapunov_info, &ml_info, mre_s, gn_s, 1, 1, -1);
+    assert_exit(init_mregn_lyapunov_info, &ml_info, mre_s, gn_s, 1, 1,
             gn_s->length);
     if (mre_s->mre->in_state_size == mre_s->mre->out_state_size ||
             mre_s->mre->in_state_size == 0) {
-        assert_exit_nocall(init_mregn_lyapunov_info, &ml_info, mre_s, gn_s,
-                1, 1, 0);
+        assert_noexit(init_mregn_lyapunov_info, &ml_info, mre_s, gn_s, 1, 1, 0);
         free_mregn_lyapunov_info(&ml_info);
     }
 }
@@ -69,19 +72,19 @@ static void test_mre_jacobian_for_lyapunov_spectrum (
     init_mregn_lyapunov_info(&ml_info, mre_s, gn_s, 1, 1, 0);
     MALLOC2(matrix, ml_info.dimension, ml_info.dimension);
 
-    assert_exit_call(mre_jacobian_for_lyapunov_spectrum, NULL,
+    assert_exit(mre_jacobian_for_lyapunov_spectrum, NULL, ml_info.dimension, 0,
+            matrix, &ml_info);
+    assert_exit(mre_jacobian_for_lyapunov_spectrum, ml_info.state[1],
             ml_info.dimension, 0, matrix, &ml_info);
-    assert_exit_call(mre_jacobian_for_lyapunov_spectrum, ml_info.state[1],
-            ml_info.dimension, 0, matrix, &ml_info);
-    assert_exit_call(mre_jacobian_for_lyapunov_spectrum, ml_info.state[0],
+    assert_exit(mre_jacobian_for_lyapunov_spectrum, ml_info.state[0],
             ml_info.dimension+1, 0, matrix, &ml_info);
-    assert_exit_call(mre_jacobian_for_lyapunov_spectrum, ml_info.state[0],
+    assert_exit(mre_jacobian_for_lyapunov_spectrum, ml_info.state[0],
             ml_info.dimension-1, 0, matrix, &ml_info);
-    assert_exit_call(mre_jacobian_for_lyapunov_spectrum, ml_info.state[0],
+    assert_exit(mre_jacobian_for_lyapunov_spectrum, ml_info.state[0],
             ml_info.dimension, -1, matrix, &ml_info);
-    assert_exit_call(mre_jacobian_for_lyapunov_spectrum, ml_info.state[0],
+    assert_exit(mre_jacobian_for_lyapunov_spectrum, ml_info.state[0],
             ml_info.dimension, gn_s->length, matrix, &ml_info);
-    assert_exit_call(mre_jacobian_for_lyapunov_spectrum, ml_info.state[0],
+    assert_exit(mre_jacobian_for_lyapunov_spectrum, ml_info.state[0],
             ml_info.dimension, mre_s->length, matrix, &ml_info);
 
     int min_length = (gn_s->length < mre_s->length) ?
