@@ -226,6 +226,9 @@ static void free_parameters (struct general_parameters *gp)
         FREE2(gp->inp.has_connection_ci);
         FREE2(gp->inp.has_connection_cc);
         FREE2(gp->inp.has_connection_oc);
+        FREE2(gp->inp.connectivity_ci);
+        FREE2(gp->inp.connectivity_cc);
+        FREE2(gp->inp.connectivity_oc);
         FREE(gp->inp.const_init_c);
         FREE(gp->inp.init_tau);
     }
@@ -791,12 +794,21 @@ static void setup_parameters (
                 gp->mp.c_state_size);
         MALLOC2(gp->inp.has_connection_oc, t_reader->dimension,
                 gp->mp.c_state_size);
+        MALLOC2(gp->inp.connectivity_ci, gp->mp.c_state_size,
+                t_reader->dimension);
+        MALLOC2(gp->inp.connectivity_cc, gp->mp.c_state_size,
+                gp->mp.c_state_size);
+        MALLOC2(gp->inp.connectivity_oc, t_reader->dimension,
+                gp->mp.c_state_size);
         str_to_connection(gp->mp.connection_i2c, t_reader->dimension,
-                gp->mp.c_state_size, gp->inp.has_connection_ci);
+                gp->mp.c_state_size, gp->inp.has_connection_ci,
+                gp->inp.connectivity_ci);
         str_to_connection(gp->mp.connection_c2c, gp->mp.c_state_size,
-                gp->mp.c_state_size, gp->inp.has_connection_cc);
+                gp->mp.c_state_size, gp->inp.has_connection_cc,
+                gp->inp.connectivity_cc);
         str_to_connection(gp->mp.connection_c2o, gp->mp.c_state_size,
-                t_reader->dimension, gp->inp.has_connection_oc);
+                t_reader->dimension, gp->inp.has_connection_oc,
+                gp->inp.connectivity_oc);
         MALLOC(gp->inp.const_init_c, gp->mp.c_state_size);
         str_to_const_init_c(gp->mp.const_init_c, gp->mp.c_state_size,
                 gp->inp.const_init_c);

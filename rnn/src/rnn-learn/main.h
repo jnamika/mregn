@@ -131,6 +131,9 @@ typedef struct internal_parameters {
     int **has_connection_ci;
     int **has_connection_cc;
     int **has_connection_oc;
+    double **connectivity_ci;
+    double **connectivity_cc;
+    double **connectivity_oc;
     int *const_init_c;
     int softmax_group_num;
     int *softmax_group_id;

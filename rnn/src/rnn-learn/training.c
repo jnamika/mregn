@@ -160,12 +160,27 @@ static void set_parameters_to_recurrent_neural_network (
                     rnn_p->out_state_size * sizeof(int));
         }
         for (int i = 0; i < rnn_p->c_state_size; i++) {
+            for (int j = 0; j < rnn_p->in_state_size; j++) {
+                if (gp->inp.connectivity_ci[i][j] <= genrand_real2()) {
+                    gp->inp.has_connection_ci[i][j] = 0;
+                }
+            }
             rnn_set_connection(rnn_p->in_state_size, rnn_p->connection_ci[i],
                     gp->inp.has_connection_ci[i]);
+            for (int j = 0; j < rnn_p->c_state_size; j++) {
+                if (gp->inp.connectivity_cc[i][j] <= genrand_real2()) {
+                    gp->inp.has_connection_cc[i][j] = 0;
+                }
+            }
             rnn_set_connection(rnn_p->c_state_size, rnn_p->connection_cc[i],
                     gp->inp.has_connection_cc[i]);
         }
         for (int i = 0; i < rnn_p->out_state_size; i++) {
+            for (int j = 0; j < rnn_p->c_state_size; j++) {
+                if (gp->inp.connectivity_oc[i][j] <= genrand_real2()) {
+                    gp->inp.has_connection_oc[i][j] = 0;
+                }
+            }
             rnn_set_connection(rnn_p->c_state_size, rnn_p->connection_oc[i],
                     gp->inp.has_connection_oc[i]);
         }
