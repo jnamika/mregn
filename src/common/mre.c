@@ -153,7 +153,6 @@ void mre_clean_target (struct mixture_of_rnn_experts *mre)
         free_mre_state(mre->mre_s + i);
     }
     FREE(mre->mre_s);
-    mre->mre_s = NULL;
     mre->series_num = 0;
 }
 
@@ -212,7 +211,6 @@ void free_mixture_of_rnn_experts (struct mixture_of_rnn_experts *mre)
         free_mre_state(mre->mre_s + i);
     }
     FREE(mre->mre_s);
-    mre->mre_s = NULL;
     mre->series_num = 0;
 }
 
