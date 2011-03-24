@@ -14,15 +14,16 @@
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#define TEST_CODE
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 
-#define TEST_CODE
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include "minunit.h"
 #include "my_assert.h"
 #include "utils.h"
@@ -206,33 +207,6 @@ void assert_effect_mre_learn_with_adapt_lr (
 }
 
 /* test functions */
-
-
-static void test_init_mixture_of_rnn_experts (void)
-{
-    struct mixture_of_rnn_experts mre;
-    assert_exit(init_mixture_of_rnn_experts, &mre, 0, 0, 1, 1);
-    assert_exit(init_mixture_of_rnn_experts, &mre, 1, -1, 1, 1);
-    assert_exit(init_mixture_of_rnn_experts, &mre, 1, 0, 0, 1);
-    assert_exit(init_mixture_of_rnn_experts, &mre, 1, 0, 1, 0);
-    assert_noexit(init_mixture_of_rnn_experts, &mre, 1, 0, 1, 1);
-    free_mixture_of_rnn_experts(&mre);
-}
-
-static void test_init_mre_state (void)
-{
-    struct mre_state mre_s;
-    struct mixture_of_rnn_experts mre;
-
-    init_mixture_of_rnn_experts(&mre, 1, 0, 1, 1);
-
-    assert_exit(init_mre_state, &mre_s, &mre, 0);
-    assert_noexit(init_mre_state, &mre_s, &mre, 1);
-
-    free_mre_state(&mre_s);
-    free_mixture_of_rnn_experts(&mre);
-}
-
 
 
 static void test_fwrite_mixture_of_rnn_experts (
@@ -1027,9 +1001,6 @@ static void test_mre_data_setup (
 
 void test_mre (void)
 {
-    mu_run_test(test_init_mixture_of_rnn_experts);
-    mu_run_test(test_init_mre_state);
-
     struct test_mre_data t_data[3];
     test_mre_data_setup(t_data, 3837L, 8, 10, 15, 7, 3, (int[]){100,100,50});
     test_mre_data_setup(t_data+1, 937112L, 4, 4, 9, 4, 2, (int[]){50,100});

@@ -14,14 +14,16 @@
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <signal.h>
+#include <math.h>
+
 #include "utils.h"
 #include "training.h"
 #include "rnn.h"
@@ -54,6 +56,19 @@ static void set_parameters_to_recurrent_neural_network (
 /******************************************************************************/
 /************** Training Main *************************************************/
 /******************************************************************************/
+
+static volatile int signal_int = 0;
+static volatile int signal_term = 0;
+
+void sigfunc_int (int sig)
+{
+    signal_int = 1;
+}
+
+void sigfunc_term (int sig)
+{
+    signal_term = 1;
+}
 
 static void init_training_main (
         struct general_parameters *gp,
@@ -107,6 +122,21 @@ void training_main (
     struct recurrent_neural_network rnn;
     struct output_files fp_list;
 
+    sigset_t sigblock;
+    sigemptyset(&sigblock);
+    sigaddset(&sigblock, SIGINT);
+    sigaddset(&sigblock, SIGTERM);
+    struct sigaction act[2];
+    memset(act, 0, sizeof(act));
+    act[0].sa_handler = sigfunc_int;
+    act[0].sa_flags = 0;
+    act[1].sa_handler = sigfunc_term;
+    act[1].sa_flags = 0;
+    if (sigaction(SIGINT, &act[0], NULL) < 0 ||
+            sigaction(SIGTERM, &act[1], NULL) < 0) {
+        print_error_msg();
+    }
+
     init_training_main(gp, mre, &rnn, &fp_list);
 
     if (strlen(gp->iop.load_filename) == 0) {
@@ -130,6 +160,11 @@ void training_main (
             fflush(stdout);
         }
         print_training_main_loop(epoch, gp, mre, &rnn, &fp_list);
+        sigprocmask(SIG_BLOCK, &sigblock, NULL);
+        if (signal_int || signal_term) {
+            gp->mp.epoch_size = epoch;
+        }
+        sigprocmask(SIG_UNBLOCK, &sigblock, NULL);
     }
 
     fini_training_main(gp, &rnn, &fp_list);

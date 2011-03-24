@@ -29,7 +29,7 @@ def init_genrand(seed):
     librunner.init_genrand(c_ulong(seed % 4294967295 + 1))
 
 
-class MREGNRunner:
+class MREGNRunner(object):
     def __init__(self, librunner=librunner):
         self.runner = c_void_p()
         self.librunner = librunner

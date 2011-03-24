@@ -14,15 +14,16 @@
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#define TEST_CODE
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 
-#define TEST_CODE
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include "minunit.h"
 #include "my_assert.h"
 #include "utils.h"
@@ -170,10 +171,6 @@ static void test_set_init_state_of_mregn_runner (
         struct test_mregn_runner_data *t_data)
 {
     struct mregn_runner *runner = &t_data->runner;
-    assert_noexit(set_init_state_of_mregn_runner, runner, -1);
-    assert_noexit(set_init_state_of_mregn_runner, runner, 0);
-    assert_noexit(set_init_state_of_mregn_runner, runner, 1000);
-
     for (int i = 0; i < t_data->target_num; i++) {
         set_init_state_of_mregn_runner(runner, i);
         int length = gn_delay_length_from_runner(runner);
