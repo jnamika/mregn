@@ -81,5 +81,5 @@ if [ ! -f "$gn_file" ]; then
 fi
 
 
-python `dirname $0`/mregn_kl_div.py $seed $length $samples $truncate_length $block_length $divide_num $mre_file $gn_file $@
+python `dirname $0`/mregn_kl_div.py "$seed" "$length" "$samples" "$truncate_length" "$block_length" "$divide_num" "$mre_file" "$gn_file" $@
 

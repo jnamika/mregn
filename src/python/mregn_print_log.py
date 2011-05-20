@@ -17,18 +17,18 @@ def read_parameter(f):
     params = {}
     for line in f:
         for k,v in r.iteritems():
-            if (v.match(line)):
+            if v.match(line):
                 x = int(line.split('=')[1])
                 if k == 'target':
                     m = v.match(line).group(1)
-                    if (k in params):
+                    if k in params:
                         params[k][m] = x
                     else:
                         params[k] = {m:x}
                 else:
                     params[k] = x
 
-        if (r_comment.match(line) == None):
+        if r_comment.match(line) == None:
             break
     f.seek(0)
     return params
@@ -142,23 +142,23 @@ def print_error(f, epoch=None):
 
 def print_log(f, epoch):
     line = f.readline()
-    if (re.compile(r'^# MRE STATE FILE').match(line)):
+    if re.compile(r'^# MRE STATE FILE').match(line):
         print_state(f, epoch)
-    elif (re.compile(r'^# MRE GATE FILE').match(line)):
+    elif re.compile(r'^# MRE GATE FILE').match(line):
         print_gate(f, epoch)
-    elif (re.compile(r'^# MRE WEIGHT FILE').match(line)):
+    elif re.compile(r'^# MRE WEIGHT FILE').match(line):
         print_weight(f, epoch)
-    elif (re.compile(r'^# MRE THRESHOLD FILE').match(line)):
+    elif re.compile(r'^# MRE THRESHOLD FILE').match(line):
         print_threshold(f, epoch)
-    elif (re.compile(r'^# MRE TAU FILE').match(line)):
+    elif re.compile(r'^# MRE TAU FILE').match(line):
         print_tau(f, epoch)
-    elif (re.compile(r'^# MRE SIGMA FILE').match(line)):
+    elif re.compile(r'^# MRE SIGMA FILE').match(line):
         print_sigma(f, epoch)
-    elif (re.compile(r'^# MRE INIT FILE').match(line)):
+    elif re.compile(r'^# MRE INIT FILE').match(line):
         print_init(f, epoch)
-    elif (re.compile(r'^# MRE ADAPT_LR FILE').match(line)):
+    elif re.compile(r'^# MRE ADAPT_LR FILE').match(line):
         print_adapt_lr(f, epoch)
-    elif (re.compile(r'^# MRE ERROR FILE').match(line)):
+    elif re.compile(r'^# MRE ERROR FILE').match(line):
         print_error(f, epoch)
     else:
         f.seek(0)

@@ -165,8 +165,8 @@ def plot_init(f, filename, epoch):
         p.stdin.write('set nokey;')
         p.stdin.write("set title 'Type=Init(Expert %d)  File=%s';" % (i,
             filename))
-        p.stdin.write("set xlabel 'Time step';")
-        p.stdin.write("set ylabel 'Initial state';")
+        p.stdin.write("set xlabel 'x';")
+        p.stdin.write("set ylabel 'y';")
         p.stdin.write('set pointsize 3;')
         command = ['plot ']
         k = expert_num * i + 2
@@ -210,23 +210,23 @@ def plot_error(f, filename):
 
 def plot_log(f, file, epoch):
     line = f.readline()
-    if (re.compile(r'^# MRE STATE FILE').match(line)):
+    if re.compile(r'^# MRE STATE FILE').match(line):
         plot_state(f, file, epoch)
-    elif (re.compile(r'^# MRE GATE FILE').match(line)):
+    elif re.compile(r'^# MRE GATE FILE').match(line):
         plot_gate(f, file, epoch)
-    elif (re.compile(r'^# MRE WEIGHT FILE').match(line)):
+    elif re.compile(r'^# MRE WEIGHT FILE').match(line):
         plot_weight(f, file)
-    elif (re.compile(r'^# MRE THRESHOLD FILE').match(line)):
+    elif re.compile(r'^# MRE THRESHOLD FILE').match(line):
         plot_threshold(f, file)
-    elif (re.compile(r'^# MRE TAU FILE').match(line)):
+    elif re.compile(r'^# MRE TAU FILE').match(line):
         plot_tau(f, file)
-    elif (re.compile(r'^# MRE SIGMA FILE').match(line)):
+    elif re.compile(r'^# MRE SIGMA FILE').match(line):
         plot_sigma(f, file)
-    elif (re.compile(r'^# MRE INIT FILE').match(line)):
+    elif re.compile(r'^# MRE INIT FILE').match(line):
         plot_init(f, file, epoch)
-    elif (re.compile(r'^# MRE ADAPT_LR FILE').match(line)):
+    elif re.compile(r'^# MRE ADAPT_LR FILE').match(line):
         plot_adapt_lr(f, file)
-    elif (re.compile(r'^# MRE ERROR FILE').match(line)):
+    elif re.compile(r'^# MRE ERROR FILE').match(line):
         plot_error(f, file)
     else:
         f.seek(0)
