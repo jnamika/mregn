@@ -19,7 +19,10 @@ def main():
     mregn_runner.init_genrand(seed)
     runner = my_runner()
     runner.init(mre_file, gn_file)
-    runner.set_time_series_id()
+    runner.set_time_series_id(-1)
+
+    ignore_index = [i for i in ignore_index if i >= 0 and i <
+            runner.mre_in_state_size() and i < runner.mre_out_state_size()]
 
     p = re.compile(r'(^#)|(^$)')
     out_state_queue = []
@@ -30,7 +33,7 @@ def main():
                 out_state = out_state_queue.pop(0)
                 for i in ignore_index:
                     input[i] = out_state[i]
-            runner.mre_in_state(input)
+            runner.mre_in_state(input[:runner.mre_in_state_size()])
             runner.update()
             out_state = runner.mre_out_state()
             print '\t'.join([str(x) for x in out_state])
