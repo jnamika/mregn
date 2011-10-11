@@ -16,7 +16,7 @@ def read_parameter(f):
     r_comment = re.compile(r'^#')
     params = {}
     for line in f:
-        for k,v in r.iteritems():
+        for k,v in r.items():
             if v.match(line):
                 x = int(line.split('=')[1])
                 if k == 'target':
@@ -49,28 +49,28 @@ def print_weight(f, epoch=None):
     s = rnn_print_log.current_line(f, epoch)
     if s != None:
         epoch = s[0]
-        print 'epoch : %s' % epoch
+        print('epoch : %s' % epoch)
         s = s[1:]
-        for i in xrange(expert_num):
-            print 'expert : %s' % i
+        for i in range(expert_num):
+            print('expert : %s' % i)
             w_i2c, w_c2c, w_c2o = [], [], []
-            for j in xrange(c_state_size):
+            for j in range(c_state_size):
                 w_i2c.append(s[:in_state_size])
                 s = s[in_state_size:]
                 w_c2c.append(s[:c_state_size])
                 s = s[c_state_size:]
-            for j in xrange(out_state_size):
+            for j in range(out_state_size):
                 w_c2o.append(s[:c_state_size])
                 s = s[c_state_size:]
-            print 'weight (input to context)'
+            print('weight (input to context)')
             for w in w_i2c:
-                print '\t'.join([str(x) for x in w])
-            print 'weight (context to context)'
+                print('\t'.join([str(x) for x in w]))
+            print('weight (context to context)')
             for w in w_c2c:
-                print '\t'.join([str(x) for x in w])
-            print 'weight (context to output)'
+                print('\t'.join([str(x) for x in w]))
+            print('weight (context to output)')
             for w in w_c2o:
-                print '\t'.join([str(x) for x in w])
+                print('\t'.join([str(x) for x in w]))
 
 def print_threshold(f, epoch=None):
     params = read_parameter(f)
@@ -80,18 +80,18 @@ def print_threshold(f, epoch=None):
     s = rnn_print_log.current_line(f, epoch)
     if s != None:
         epoch = s[0]
-        print 'epoch : %s' % epoch
+        print('epoch : %s' % epoch)
         s = s[1:]
-        for i in xrange(expert_num):
-            print 'expert : %s' % i
+        for i in range(expert_num):
+            print('expert : %s' % i)
             t_c = s[:c_state_size]
             s = s[c_state_size:]
             t_o = s[:out_state_size]
             s = s[out_state_size:]
-            print 'threshold (context)'
-            print '\t'.join([str(x) for x in t_c])
-            print 'threshold (output)'
-            print '\t'.join([str(x) for x in t_o])
+            print('threshold (context)')
+            print('\t'.join([str(x) for x in t_c]))
+            print('threshold (output)')
+            print('\t'.join([str(x) for x in t_o]))
 
 def print_tau(f, epoch=None):
     params = read_parameter(f)
@@ -100,14 +100,14 @@ def print_tau(f, epoch=None):
     s = rnn_print_log.current_line(f, epoch)
     if s != None:
         epoch = s[0]
-        print 'epoch : %s' % epoch
+        print('epoch : %s' % epoch)
         s = s[1:]
-        for i in xrange(expert_num):
-            print 'expert : %s' % i
+        for i in range(expert_num):
+            print('expert : %s' % i)
             tau = s[:c_state_size]
             s = s[c_state_size:]
-            print 'time constant'
-            print '\t'.join([str(x) for x in tau])
+            print('time constant')
+            print('\t'.join([str(x) for x in tau]))
 
 def print_sigma(f, epoch=None):
     s = rnn_print_log.current_line(f, epoch)
@@ -115,9 +115,9 @@ def print_sigma(f, epoch=None):
         epoch = s[0]
         sigma = s[1::2]
         variance = s[2::2]
-        print 'epoch : %s' % epoch
-        print 'sigma : %s' % '\t'.join([str(x) for x in sigma])
-        print 'variance : %s' % '\t'.join([str(x) for x in variance])
+        print('epoch : %s' % epoch)
+        print('sigma : %s' % '\t'.join([str(x) for x in sigma]))
+        print('variance : %s' % '\t'.join([str(x) for x in variance]))
 
 def print_init(f, epoch=None):
     rnn_print_log.print_init(f, epoch)
@@ -132,13 +132,13 @@ def print_error(f, epoch=None):
         error = s[1::3]
         joint_likelihood = s[2::3]
         total_likelihood = s[3::3]
-        print 'epoch : %s' % epoch
-        print 'error / (length * dimension)'
-        print '\t'.join([str(x) for x in error])
-        print 'joint_likelihood / length'
-        print '\t'.join([str(x) for x in joint_likelihood])
-        print 'total_likelihood / length'
-        print '\t'.join([str(x) for x in total_likelihood])
+        print('epoch : %s' % epoch)
+        print('error / (length * dimension)')
+        print('\t'.join([str(x) for x in error]))
+        print('joint_likelihood / length')
+        print('\t'.join([str(x) for x in joint_likelihood]))
+        print('total_likelihood / length')
+        print('\t'.join([str(x) for x in total_likelihood]))
 
 def print_log(f, epoch):
     line = f.readline()

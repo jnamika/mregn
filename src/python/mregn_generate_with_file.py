@@ -28,7 +28,7 @@ def main():
     out_state_queue = []
     for line in open(sequence_file, 'r'):
         if p.match(line) == None:
-            input = map(float, line[:-1].split())
+            input = list(map(float, line[:-1].split()))
             if len(out_state_queue) >= runner.mre_delay_length():
                 out_state = out_state_queue.pop(0)
                 for i in ignore_index:
@@ -36,7 +36,7 @@ def main():
             runner.mre_in_state(input[:runner.mre_in_state_size()])
             runner.update()
             out_state = runner.mre_out_state()
-            print '\t'.join([str(x) for x in out_state])
+            print('\t'.join([str(x) for x in out_state]))
             out_state_queue.append(out_state)
 
 if __name__ == '__main__':
